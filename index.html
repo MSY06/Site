@@ -2,50 +2,55 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>منصة دورات | تعلّم بلا حدود</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --navy: #092b4c; --green: #08b98b; --bg: #f3fbf9; --text: #132e47; }
-  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); }
-  header { background: var(--navy); color: white; padding: 15px 0; }
-  .container { width: min(1100px, 90%); margin: auto; }
-  nav { display: flex; justify-content: space-between; align-items: center; }
-  .brand { font-size: 24px; font-weight: 900; display: flex; align-items: center; gap: 10px; }
-  .brand span { background: var(--green); width: 35px; height: 35px; display: grid; place-items: center; border-radius: 10px; }
-  .btn { background: var(--green); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; }
-  .hero { text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #e0f7f2, #f3fbf9); }
-  .hero h1 { font-size: 40px; color: var(--navy); margin-bottom: 10px; }
-  .hero p { color: #6b7f8d; font-size: 18px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 40px 0; }
-  .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s; }
-  .card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-  .card-body { padding: 20px; }
-  .card-cat { color: var(--green); font-size: 12px; font-weight: bold; }
-  .card-title { font-size: 18px; margin: 10px 0; color: var(--navy); }
-  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
-  .price { font-size: 20px; font-weight: 900; color: var(--green); }
-  .search-bar { display: flex; justify-content: center; margin-top: -25px; }
-  .search-bar input { width: 100%; max-width: 500px; padding: 15px; border: none; border-radius: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); font-family: inherit; outline: none; }
-  .loading { text-align: center; padding: 40px; font-weight: bold; color: var(--navy); }
+  :root { --navy: #0f172a; --green: #10b981; --bg: #f8fafc; --text: #1e293b; --muted: #64748b; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+  body { background: var(--bg); color: var(--text); line-height: 1.6; }
+  header { background: var(--navy); color: white; padding: 15px 20px; position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+  .brand { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .brand span { background: var(--green); width: 32px; height: 32px; display: grid; place-items: center; border-radius: 8px; font-size: 20px; }
+  .btn-outline { color: white; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; transition: 0.3s; }
+  .btn-outline:hover { background: rgba(255,255,255,0.1); }
+  
+  .hero { text-align: center; padding: 60px 20px 40px; background: linear-gradient(180deg, #e0f2fe 0%, var(--bg) 100%); }
+  .hero h1 { font-size: clamp(28px, 5vw, 42px); color: var(--navy); margin-bottom: 15px; line-height: 1.3; }
+  .hero p { color: var(--muted); font-size: clamp(16px, 3vw, 18px); max-width: 600px; margin: 0 auto 30px; }
+  
+  .search-container { max-width: 600px; margin: 0 auto; position: relative; padding: 0 20px; }
+  .search-container input { width: 100%; padding: 16px 20px; border: 1px solid #cbd5e1; border-radius: 50px; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); outline: none; transition: 0.3s; }
+  .search-container input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+  
+  .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+  
+  .card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+  .card-img { height: 140px; background: linear-gradient(135deg, #10b981, #059669); display: grid; place-items: center; font-size: 50px; color: white; }
+  .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+  .card-cat { color: var(--green); font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .card-title { font-size: 18px; color: var(--navy); margin-bottom: 15px; font-weight: 700; line-height: 1.4; }
+  .card-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f1f5f9; padding-top: 15px; }
+  .price { font-size: 20px; font-weight: 800; color: var(--green); }
+  .btn-primary { background: var(--green); color: white; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 14px; transition: 0.3s; }
+  .btn-primary:hover { background: #059669; }
+  
+  .loading { text-align: center; padding: 40px; color: var(--muted); font-weight: 600; grid-column: 1/-1; }
 </style>
 </head>
 <body>
 <header>
-  <div class="container">
-    <nav>
-      <div class="brand"><span>▱</span> منصة دورات</div>
-      <a href="login.html" class="btn" style="background: transparent; border: 1px solid white;">دخول الإدارة</a>
-    </nav>
-  </div>
+  <div class="brand"><span>▱</span> منصة دورات</div>
+  <a href="login.html" class="btn-outline">دخول الإدارة</a>
 </header>
+
 <section class="hero">
-  <div class="container">
-    <h1>تعلّم بلا حدود، وطوّر مهاراتك</h1>
-    <p>أفضل الدورات التدريبية في البرمجة، التصميم، التسويق، والأعمال.</p>
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="ابحث عن دورة أو مدرب...">
-    </div>
+  <h1>اكتشف مهاراتك الجديدة</h1>
+  <p>منصة تعليمية متكاملة تضم أفضل الدورات في البرمجة، التصميم، التسويق، والأعمال.</p>
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="ابحث عن دورة، مدرب، أو قسم...">
   </div>
 </section>
 
@@ -68,28 +73,25 @@
       allCourses = await res.json();
       renderCourses(allCourses);
     } catch (e) {
-      document.getElementById('coursesGrid').innerHTML = '<div class="loading">حدث خطأ في الاتصال.</div>';
+      document.getElementById('coursesGrid').innerHTML = '<div class="loading" style="color:red;">حدث خطأ في الاتصال بقاعدة البيانات.</div>';
     }
   }
 
   function renderCourses(courses) {
     const grid = document.getElementById('coursesGrid');
-    if(courses.length === 0) {
-      grid.innerHTML = '<div class="loading">لا توجد دورات متاحة حالياً.</div>';
+    if(!courses || courses.length === 0) {
+      grid.innerHTML = '<div class="loading">لا توجد دورات منشورة حالياً.</div>';
       return;
     }
     grid.innerHTML = courses.map(c => `
       <div class="card">
-        <div style="height:120px; background:linear-gradient(45deg,#08b98b,#0fd8a5); display:grid; place-items:center; font-size:40px; color:white;">
-          ${c.icon || '▤'}
-        </div>
+        <div class="card-img">${c.icon || '📚'}</div>
         <div class="card-body">
           <div class="card-cat">${c.category}</div>
           <h3 class="card-title">${c.title}</h3>
-          <div style="font-size:12px; color:#6b7f8d;">المدرب: ${c.instructor}</div>
           <div class="card-footer">
             <div class="price">${c.price} ر.س</div>
-            <a href="course.html?id=${c.id}" class="btn">التفاصيل ←</a>
+            <a href="course.html?id=${c.id}" class="btn-primary">التفاصيل</a>
           </div>
         </div>
       </div>
@@ -98,7 +100,7 @@
 
   document.getElementById('searchInput').addEventListener('input', (e) => {
     const q = e.target.value.toLowerCase();
-    renderCourses(allCourses.filter(c => c.title.toLowerCase().includes(q) || c.instructor.toLowerCase().includes(q)));
+    renderCourses(allCourses.filter(c => c.title.toLowerCase().includes(q) || c.category.toLowerCase().includes(q)));
   });
 
   fetchCourses();
