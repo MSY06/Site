@@ -229,7 +229,10 @@
     const id = document.getElementById('cId').value;
     const title = document.getElementById('cTitle').value;
     
-    if(!title || title.trim() === '') { alert("يرجى إدخال عنوان الدورة!"); return; }
+    if(!title || title.trim() === '') {
+      alert("يرجى إدخال عنوان الدورة أولاً!");
+      return;
+    }
 
     const btn = document.getElementById('saveBtn');
     btn.innerText = 'جاري الحفظ...'; btn.disabled = true;
@@ -243,34 +246,52 @@
       published: true 
     };
 
+    // تحديد ما إذا كنا نضيف دورة جديدة أم نعدل دورة موجودة
     let method = id ? 'PATCH' : 'POST'; 
     let url = id ? `${URL}/courses?id=eq.${id}` : `${URL}/courses`;
     let headers = { ...H }; 
     if(!id) headers['Prefer'] = 'return=representation';
 
     try {
+      console.log("جاري إرسال الطلب إلى:", url);
+      console.log("البيانات المرسلة:", payload);
+      console.log("الترويسات (Headers):", headers);
+
       let r = await fetch(url, { method, headers, body: JSON.stringify(payload) });
       
+      // إذا فشل الطلب، نقرأ النص الكامل للخطأ
       if (!r.ok) {
-        const errorData = await r.text();
-        throw new Error("فشل الحفظ: " + r.status + "\n" + errorData);
+        const errorText = await r.text();
+        console.error("فشل الطلب. الرمز:", r.status, "التفاصيل:", errorText);
+        throw new Error("فشل الحفظ. الرمز: " + r.status + "\nالتفاصيل: " + errorText);
       }
       
       let res = await r.json();
+      console.log("رد السيرفر بعد الحفظ:", res);
+
       let cid = id;
       if (!id) {
-        if (!res || res.length === 0) throw new Error("لم يتم إرجاع ID الدورة.");
+        if (!res || res.length === 0) throw new Error("لم يتم إرجاع ID الدورة من السيرفر.");
         cid = res[0].id;
       }
 
-      await fetch(`${URL}/course_lessons?course_id=eq.${cid}`, { method: 'DELETE', headers: H });
-      
+      // حذف الدروس القديمة (إذا كان تعديلاً)
+      let delRes = await fetch(`${URL}/course_lessons?course_id=eq.${cid}`, { method: 'DELETE', headers: H });
+      if (!delRes.ok) throw new Error("فشل حذف الدروس القديمة.");
+
+      // حفظ الدروس الجديدة
       if(currentLessons.length > 0) {
         const lData = currentLessons.map((l, i) => ({ 
-          course_id: cid, title: l.title || `الدرس ${i+1}`, video_url: l.video_url || '', sort_order: i 
+          course_id: cid, 
+          title: l.title || `الدرس ${i+1}`, 
+          video_url: l.video_url || '', 
+          sort_order: i 
         }));
         let r2 = await fetch(`${URL}/course_lessons`, { method: 'POST', headers: H, body: JSON.stringify(lData) });
-        if (!r2.ok) throw new Error("تم حفظ الدورة، لكن فشل حفظ الدروس.");
+        if (!r2.ok) {
+          const err2 = await r2.text();
+          throw new Error("تم حفظ الدورة، لكن فشل حفظ الدروس.\n" + err2);
+        }
       }
 
       document.getElementById('courseModal').classList.remove('active'); 
@@ -283,18 +304,6 @@
       btn.innerText = 'حفظ الدورة'; btn.disabled = false;
     }
   };
-
-  window.saveSettings = async () => {
-    const payload = [
-      { key: 'brand', value: document.getElementById('setBrand').value },
-      { key: 'hero_title', value: document.getElementById('setTitle').value },
-      { key: 'hero_desc', value: document.getElementById('setDesc').value }
-    ];
-    await fetch(`${URL}/site_settings`, { method: 'POST', headers: { ...H, 'Prefer': 'resolution=merge-duplicates' }, body: JSON.stringify(payload) });
-    alert('تم حفظ الإعدادات بنجاح!');
-  };
-
-  load();
 </script>
 </body>
 </html>
