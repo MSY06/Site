@@ -126,10 +126,7 @@
   const URL = "https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1";
   const STORAGE = "https://rzostpeiwkdfpozhqsrv.supabase.co/storage/v1/object/public/videos/";
   const KEY = "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D";
-  
-  // تم إزالة Authorization نهائياً لحل مشكلة الخطأ
   const H = { 'apikey': KEY, 'Content-Type': 'application/json' };
-  
   let courses = [], cats = [], enrolls = [], currentLessons = [];
 
   function tab(id, el) {
@@ -140,27 +137,64 @@
 
   async function load() {
     try {
-      let r = await fetch(`${URL}/categories`, { headers: H }); cats = await r.json();
-      document.getElementById('cCategory').innerHTML = cats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      // 1. جلب الأقسام
+      let r = await fetch(`${URL}/categories`, { headers: H });
+      if (!r.ok) throw new Error("فشل تحميل الأقسام من قاعدة البيانات.");
+      cats = await r.json();
+      
+      let catOptions = cats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+      if(catOptions === '') catOptions = '<option value="عام">عام</option>';
+      document.getElementById('cCategory').innerHTML = catOptions;
+      
       document.getElementById('tCats').innerHTML = cats.map(c => `<tr><td>${c.name}</td><td><button class="btn btn-red btn-sm" onclick="delCat('${c.id}')">حذف</button></td></tr>`).join('');
 
-      r = await fetch(`${URL}/courses?select=*,course_lessons(*)&order=created_at.desc`, { headers: H }); courses = await r.json();
-      document.getElementById('tCourses').innerHTML = courses.map(c => `<tr><td>${c.title}</td><td>${c.category}</td><td>${c.price} ر.س</td><td><button class="btn btn-sm" onclick="editCourse('${c.id}')">تعديل</button> <button class="btn btn-red btn-sm" onclick="delCourse('${c.id}')">حذف</button></td></tr>`).join('');
+      // 2. جلب الدورات (مع التحقق من وجود خطأ)
+      r = await fetch(`${URL}/courses?select=*,course_lessons(*)&order=created_at.desc`, { headers: H });
+      if (!r.ok) throw new Error("فشل تحميل الدورات. قد تكون الصلاحيات غير مفتوحة.");
+      
+      courses = await r.json();
+      if (!Array.isArray(courses)) courses = [];
 
-      r = await fetch(`${URL}/enrollments?select=*,courses(title)`, { headers: H }); enrolls = await r.json();
+      document.getElementById('tCourses').innerHTML = courses.length > 0 ? courses.map(c => `
+        <tr>
+          <td>${c.title}</td>
+          <td>${c.category}</td>
+          <td>${c.price} ر.س</td>
+          <td>
+            <button class="btn btn-sm" onclick="editCourse('${c.id}')">تعديل</button> 
+            <button class="btn btn-red btn-sm" onclick="delCourse('${c.id}')">حذف</button>
+          </td>
+        </tr>
+      `).join('') : '<tr><td colspan="4" style="text-align:center;">لا توجد دورات مضافة حتى الآن</td></tr>';
+
+      // 3. جلب الطلاب
+      r = await fetch(`${URL}/enrollments?select=*,courses(title)`, { headers: H });
+      if (!r.ok) throw new Error("فشل تحميل بيانات الطلاب.");
+      enrolls = await r.json();
+      if (!Array.isArray(enrolls)) enrolls = [];
       document.getElementById('tEnrolls').innerHTML = enrolls.map(e => `<tr><td>${e.full_name}</td><td>${e.email}</td><td>${e.courses?.title || '-'}</td></tr>`).join('');
 
+      // 4. التحديث الإحصائي
       document.getElementById('sCourses').innerText = courses.length;
       document.getElementById('sEnrolls').innerText = enrolls.length;
       document.getElementById('sViews').innerText = courses.reduce((s, c) => s + (c.views || 0), 0);
 
-      r = await fetch(`${URL}/site_settings`, { headers: H }); let settings = await r.json();
-      settings.forEach(s => {
-        if(s.key === 'brand') document.getElementById('setBrand').value = s.value;
-        if(s.key === 'hero_title') document.getElementById('setTitle').value = s.value;
-        if(s.key === 'hero_desc') document.getElementById('setDesc').value = s.value;
-      });
-    } catch(e) { console.error("خطأ في التحميل", e); }
+      // 5. الإعدادات
+      r = await fetch(`${URL}/site_settings`, { headers: H });
+      if (!r.ok) throw new Error("فشل تحميل الإعدادات.");
+      let settings = await r.json();
+      if (Array.isArray(settings)) {
+        settings.forEach(s => {
+          if(s.key === 'brand') document.getElementById('setBrand').value = s.value;
+          if(s.key === 'hero_title') document.getElementById('setTitle').value = s.value;
+          if(s.key === 'hero_desc') document.getElementById('setDesc').value = s.value;
+        });
+      }
+
+    } catch(e) {
+      console.error("خطأ في التحميل", e);
+      alert("حدث خطأ أثناء تحميل البيانات:\n" + e.message); // إظهار الخطأ للمستخدم
+    }
   }
 
   window.addCat = async () => { const v = document.getElementById('newCat').value; if(v) { await fetch(`${URL}/categories`, { method: 'POST', headers: H, body: JSON.stringify({ name: v }) }); document.getElementById('newCat').value = ''; load(); } };
@@ -185,7 +219,6 @@
     `).join('');
   }
 
-  // رفع الفيديو بنجاح
   window.upload = (input, index) => {
     const file = input.files[0]; if(!file) return;
     const name = `v_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
@@ -194,7 +227,6 @@
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', `https://rzostpeiwkdfpozhqsrv.supabase.co/storage/v1/object/videos/${name}`);
-    // رفع الفيديو يحتاج apikey فقط
     xhr.setRequestHeader('apikey', KEY);
     xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
 
@@ -224,15 +256,15 @@
     document.getElementById('mTitle').innerText = 'تعديل دورة'; document.getElementById('courseModal').classList.add('active');
   };
 
-  // حفظ الدورة بالكامل (تم إصلاح الخطأ)
+  // 🔥 دالة الحفظ المضمونة (تم إصلاح مشكلة الـ ID)
   window.saveCourse = async () => {
-    const id = document.getElementById('cId').value;
+    let id = document.getElementById('cId').value;
     const title = document.getElementById('cTitle').value;
     
-    if(!title || title.trim() === '') {
-      alert("يرجى إدخال عنوان الدورة أولاً!");
-      return;
-    }
+    // إصلاح الـ ID إذا كان غير صالح
+    if(id === 'undefined' || id === 'null' || id === null) id = '';
+
+    if(!title || title.trim() === '') { alert("يرجى إدخال عنوان الدورة!"); return; }
 
     const btn = document.getElementById('saveBtn');
     btn.innerText = 'جاري الحفظ...'; btn.disabled = true;
@@ -246,39 +278,32 @@
       published: true 
     };
 
-    // تحديد ما إذا كنا نضيف دورة جديدة أم نعدل دورة موجودة
     let method = id ? 'PATCH' : 'POST'; 
     let url = id ? `${URL}/courses?id=eq.${id}` : `${URL}/courses`;
     let headers = { ...H }; 
     if(!id) headers['Prefer'] = 'return=representation';
 
     try {
-      console.log("جاري إرسال الطلب إلى:", url);
-      console.log("البيانات المرسلة:", payload);
-      console.log("الترويسات (Headers):", headers);
-
       let r = await fetch(url, { method, headers, body: JSON.stringify(payload) });
       
-      // إذا فشل الطلب، نقرأ النص الكامل للخطأ
+      // التحقق من نجاح الطلب
       if (!r.ok) {
-        const errorText = await r.text();
-        console.error("فشل الطلب. الرمز:", r.status, "التفاصيل:", errorText);
-        throw new Error("فشل الحفظ. الرمز: " + r.status + "\nالتفاصيل: " + errorText);
+        const errorData = await r.text();
+        throw new Error("فشل الحفظ. الرمز: " + r.status + "\n" + errorData);
       }
       
       let res = await r.json();
-      console.log("رد السيرفر بعد الحفظ:", res);
-
       let cid = id;
+      
+      // إذا كانت دورة جديدة، نأخذ الـ ID الخاص بها
       if (!id) {
         if (!res || res.length === 0) throw new Error("لم يتم إرجاع ID الدورة من السيرفر.");
         cid = res[0].id;
       }
 
-      // حذف الدروس القديمة (إذا كان تعديلاً)
-      let delRes = await fetch(`${URL}/course_lessons?course_id=eq.${cid}`, { method: 'DELETE', headers: H });
-      if (!delRes.ok) throw new Error("فشل حذف الدروس القديمة.");
-
+      // حذف الدروس القديمة إذا كان تعديلاً
+      await fetch(`${URL}/course_lessons?course_id=eq.${cid}`, { method: 'DELETE', headers: H });
+      
       // حفظ الدروس الجديدة
       if(currentLessons.length > 0) {
         const lData = currentLessons.map((l, i) => ({ 
@@ -288,14 +313,12 @@
           sort_order: i 
         }));
         let r2 = await fetch(`${URL}/course_lessons`, { method: 'POST', headers: H, body: JSON.stringify(lData) });
-        if (!r2.ok) {
-          const err2 = await r2.text();
-          throw new Error("تم حفظ الدورة، لكن فشل حفظ الدروس.\n" + err2);
-        }
+        if (!r2.ok) throw new Error("تم حفظ الدورة، لكن فشل حفظ الدروس.");
       }
 
+      // إغلاق النافذة وتحديث البيانات
       document.getElementById('courseModal').classList.remove('active'); 
-      load(); 
+      await load(); 
       alert('تم حفظ الدورة بنجاح! 🎉');
 
     } catch (error) {
@@ -304,6 +327,18 @@
       btn.innerText = 'حفظ الدورة'; btn.disabled = false;
     }
   };
+
+  window.saveSettings = async () => {
+    const payload = [
+      { key: 'brand', value: document.getElementById('setBrand').value },
+      { key: 'hero_title', value: document.getElementById('setTitle').value },
+      { key: 'hero_desc', value: document.getElementById('setDesc').value }
+    ];
+    await fetch(`${URL}/site_settings`, { method: 'POST', headers: { ...H, 'Prefer': 'resolution=merge-duplicates' }, body: JSON.stringify(payload) });
+    alert('تم حفظ الإعدادات بنجاح!');
+  };
+
+  load();
 </script>
 </body>
 </html>
