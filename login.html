@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>دخول الإدارة</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
   body { background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
-  .box { background: white; padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; border: 1px solid #f1f5f9; }
-  h2 { color: #0f172a; margin-top: 0; font-size: 26px; }
+  .box { background: white; padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; }
+  h2 { color: #0f172a; margin-top: 0; }
   input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; font-size: 16px; outline: none; }
-  input:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.2); }
-  button { width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; font-family: inherit; margin-top: 10px; transition: 0.3s; }
-  button:hover { background: #059669; }
+  button { width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; font-family: inherit; margin-top: 10px; }
   .err { color: #ef4444; font-size: 13px; margin-top: 15px; display: none; background: #fef2f2; padding: 10px; border-radius: 8px; text-align: left; word-wrap: break-word; }
 </style>
 </head>
@@ -21,8 +18,8 @@
 <div class="box">
   <h2>دخول الإدارة</h2>
   <form id="f">
-    <input type="email" id="email" value="admin@dewerat.com" required dir="ltr" placeholder="البريد">
-    <input type="password" id="password" value="Dewerat@2026" required dir="ltr" placeholder="الكود">
+    <input type="email" id="email" value="admin@dewerat.com" required dir="ltr">
+    <input type="password" id="password" value="Dewerat@2026" required dir="ltr">
     <button type="submit" id="btn">دخول آمن</button>
     <div id="err" class="err"></div>
   </form>
@@ -32,33 +29,17 @@
     e.preventDefault();
     const btn = document.getElementById('btn'), err = document.getElementById('err');
     btn.textContent = 'جاري التحقق...'; btn.disabled = true; err.style.display = 'none';
-    
     try {
       const res = await fetch("https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1/rpc/verify_admin_login", {
         method: 'POST',
-        headers: {
-          'apikey': "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D",
-          'Authorization': "Bearer sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D",
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          input_email: document.getElementById('email').value.trim(),
-          input_code: document.getElementById('password').value.trim()
-        })
+        headers: { 'apikey': "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D", 'Authorization': "Bearer sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D", 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input_email: document.getElementById('email').value.trim(), input_code: document.getElementById('password').value.trim() })
       });
-      
-      if(!res.ok) throw new Error("خطأ في الاتصال: " + await res.text());
+      if(!res.ok) throw new Error(await res.text());
       const data = await res.json();
-      
-      if(data === true) {
-        localStorage.setItem('dawrat_admin_logged', 'true');
-        window.location.href = 'admin.html';
-      } else {
-        err.textContent = 'البيانات غير صحيحة!'; err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false;
-      }
-    } catch(ex) {
-      err.textContent = ex.message; err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false;
-    }
+      if(data === true) { localStorage.setItem('dawrat_admin_logged', 'true'); window.location.href = 'admin.html'; }
+      else { err.textContent = 'البيانات غير صحيحة!'; err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false; }
+    } catch(ex) { err.textContent = ex.message; err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false; }
   };
 </script>
 </body>
