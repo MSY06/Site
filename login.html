@@ -6,61 +6,43 @@
 <title>تسجيل الدخول | الإدارة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&display=swap" rel="stylesheet">
 <style>
-  :root { --navy: #092b4c; --green: #08b98b; --bg: #f3fbf9; --border: #dcebe7; }
-  * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
-  body { background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-  .box { background: white; padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(9,43,76,0.08); width: 100%; max-width: 420px; text-align: center; border: 1px solid var(--border); }
-  h2 { color: var(--navy); margin-bottom: 25px; font-weight: 800; font-size: 24px; }
-  input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 16px; outline: none; transition: 0.3s; background: #fbfdfc; }
-  input:focus { border-color: var(--green); box-shadow: 0 0 0 4px rgba(8,185,139,0.1); background: white; }
-  button { width: 100%; padding: 15px; background: var(--green); color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; font-family: inherit; margin-top: 15px; transition: 0.3s; }
-  button:hover { background: #07a379; }
-  button:disabled { opacity: 0.7; cursor: not-allowed; }
-  .err { color: #ef4444; font-size: 13px; margin-top: 15px; display: none; background: #fef2f2; padding: 12px; border-radius: 10px; text-align: right; border: 1px solid #fca5a5; line-height: 1.5; }
+  :root{--navy:#092b4c;--green:#08b98b;--bg:#f3fbf9}
+  *{box-sizing:border-box;font-family:'Cairo',sans-serif;margin:0;padding:0}
+  body{background:var(--bg);display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+  .box{background:white;padding:40px 30px;border-radius:20px;box-shadow:0 15px 35px rgba(9,43,76,0.08);width:100%;max-width:420px;text-align:center;border:1px solid #e0eeeb}
+  h2{color:var(--navy);margin-bottom:25px;font-weight:800}
+  input{width:100%;padding:15px;margin:10px 0;border:1px solid #dcebe7;border-radius:12px;font-family:inherit;font-size:16px;outline:none;transition:.3s;background:#fbfdfc}
+  input:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(8,185,139,0.1)}
+  button{width:100%;padding:15px;background:var(--green);color:white;border:none;border-radius:12px;font-weight:800;font-size:16px;cursor:pointer;margin-top:15px;transition:.3s}
+  button:hover{background:#07a379}
+  .err{color:#ef4444;font-size:13px;margin-top:15px;display:none;background:#fef2f2;padding:12px;border-radius:10px;text-align:right;border:1px solid #fca5a5}
 </style>
 </head>
 <body>
 <div class="box">
   <h2>لوحة تحكم الإدارة</h2>
-  <!-- إضافة autocomplete="off" لمنع المتصفح من التعبئة -->
-  <form id="loginForm" autocomplete="off">
+  <form id="f" autocomplete="off">
     <input type="email" id="email" required dir="ltr" placeholder="البريد الإلكتروني" autocomplete="off">
     <input type="password" id="password" required dir="ltr" placeholder="الكود السري" autocomplete="new-password">
-    <button type="submit" id="submitBtn">دخول آمن</button>
-    <div id="errorMsg" class="err"></div>
+    <button type="submit" id="btn">دخول آمن</button>
+    <div id="err" class="err"></div>
   </form>
 </div>
-
 <script>
-  document.getElementById('loginForm').onsubmit = async (e) => {
+  document.getElementById('f').onsubmit = async (e) => {
     e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    const err = document.getElementById('errorMsg');
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
-
+    const btn = document.getElementById('btn'), err = document.getElementById('err');
     btn.textContent = 'جاري التحقق...'; btn.disabled = true; err.style.display = 'none';
-    
     try {
       const res = await fetch("https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1/rpc/verify_admin_login", {
         method: 'POST',
         headers: { 'apikey': "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D", 'Authorization': "Bearer sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D", 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input_email: email, input_code: password })
+        body: JSON.stringify({ input_email: document.getElementById('email').value.trim(), input_code: document.getElementById('password').value.trim() })
       });
-      
-      if(!res.ok) throw new Error('حدث خطأ في الاتصال بالخادم.');
       const data = await res.json();
-      
-      if(data === true) { 
-        localStorage.setItem('dawrat_logged', 'true'); 
-        window.location.href = 'admin.html'; 
-      } else { 
-        err.textContent = 'البريد الإلكتروني أو الكود السري غير صحيح.'; 
-        err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false; 
-      }
-    } catch(ex) { 
-      err.textContent = ex.message; err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false; 
-    }
+      if(data === true) { localStorage.setItem('dawrat_logged', 'true'); window.location.href = 'admin.html'; }
+      else { err.textContent = 'البيانات غير صحيحة!'; err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false; }
+    } catch(ex) { err.textContent = 'خطأ في الاتصال'; err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false; }
   };
 </script>
 </body>
