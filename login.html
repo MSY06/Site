@@ -7,9 +7,9 @@
 <style>
 body{font-family:Cairo,sans-serif;background:#f3fbf9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
 .box{background:white;padding:30px;border-radius:15px;box-shadow:0 10px 25px rgba(0,0,0,0.1);width:100%;max-width:350px;text-align:center}
-input{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:8px;box-sizing:border-box}
-button{width:100%;padding:12px;background:#08b98b;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
-.err{color:red;font-size:12px;margin-top:10px;display:none;word-wrap:break-word;text-align:left;}
+input{width:100%;padding:12px;margin:10px 0;border:1px solid #ddd;border-radius:8px;box-sizing:border-box;font-family:inherit}
+button{width:100%;padding:12px;background:#08b98b;color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-family:inherit}
+.err{color:red;font-size:12px;margin-top:10px;display:none;word-wrap:break-word;text-align:left;background:#fff0f2;padding:10px;border-radius:5px;}
 </style>
 </head>
 <body>
@@ -44,21 +44,17 @@ button{width:100%;padding:12px;background:#08b98b;color:white;border:none;border
         })
       });
       
-      if(!res.ok) throw new Error("خطأ في الاتصال: " + await res.text());
-      
+      if(!res.ok) throw new Error("خطأ: " + await res.text());
       const data = await res.json();
+      
       if(data === true) {
-        localStorage.setItem('admin_logged', 'yes');
+        localStorage.setItem('dawrat_admin_logged', 'true');
         window.location.href = 'admin.html';
       } else {
-        err.textContent = 'البيانات غير صحيحة!';
-        err.style.display = 'block';
-        btn.textContent = 'دخول';
+        err.textContent = 'البيانات غير صحيحة!'; err.style.display = 'block'; btn.textContent = 'دخول';
       }
     } catch(ex) {
-      err.textContent = ex.message;
-      err.style.display = 'block';
-      btn.textContent = 'دخول';
+      err.textContent = ex.message; err.style.display = 'block'; btn.textContent = 'دخول';
     }
   };
 </script>
