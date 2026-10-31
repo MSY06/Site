@@ -21,6 +21,7 @@
 <body>
 <div class="box">
   <h2>لوحة تحكم الإدارة</h2>
+  <!-- منع المتصفح من تعبئة البيانات -->
   <form id="f" autocomplete="off">
     <input type="email" id="email" required dir="ltr" placeholder="البريد الإلكتروني" autocomplete="off">
     <input type="password" id="password" required dir="ltr" placeholder="الكود السري" autocomplete="new-password">
@@ -36,7 +37,8 @@
     try {
       const res = await fetch("https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1/rpc/verify_admin_login", {
         method: 'POST',
-        headers: { 'apikey': "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D", 'Authorization': "Bearer sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D", 'Content-Type': 'application/json' },
+        // هام جداً: بدون Authorization
+        headers: { 'apikey': "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D", 'Content-Type': 'application/json' },
         body: JSON.stringify({ input_email: document.getElementById('email').value.trim(), input_code: document.getElementById('password').value.trim() })
       });
       const data = await res.json();
