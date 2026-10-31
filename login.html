@@ -1,50 +1,100 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تسجيل الدخول | الإدارة</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&display=swap" rel="stylesheet">
-<style>
-  * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-  body { background: #f3fbf9; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
-  .box { background: white; padding: 40px 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(9,43,76,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid #e0eeeb; }
-  h2 { color: #092b4c; margin-top: 0; margin-bottom: 25px; font-weight: 800; }
-  input { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #dcebe7; border-radius: 10px; font-family: inherit; font-size: 16px; outline: none; transition: 0.3s; }
-  input:focus { border-color: #08b98b; box-shadow: 0 0 0 3px rgba(8,185,139,0.1); }
-  button { width: 100%; padding: 15px; background: #08b98b; color: white; border: none; border-radius: 10px; font-weight: 800; font-size: 16px; cursor: pointer; font-family: inherit; margin-top: 15px; transition: 0.3s; }
-  button:hover { background: #07a379; }
-  button:disabled { opacity: 0.7; cursor: not-allowed; }
-  .err { color: #ef4444; font-size: 13px; margin-top: 15px; display: none; background: #fef2f2; padding: 12px; border-radius: 8px; text-align: left; border: 1px solid #fca5a5; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الإدارة</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f5f5; /* لون الخلفية الفاتح */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .login-card {
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 350px;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .login-title {
+            color: #1a2b4c; /* اللون الكحلي الغامق */
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #00c283;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #00c283; /* اللون الأخضر */
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .login-btn:hover {
+            background-color: #00a36c;
+        }
+    </style>
 </head>
 <body>
-<div class="box">
-  <h2>لوحة تحكم الإدارة</h2>
-  <form id="f">
-    <input type="email" id="email" value="admin@dewerat.com" required dir="ltr" placeholder="البريد الإلكتروني">
-    <input type="password" id="password" value="Dewerat@2026" required dir="ltr" placeholder="الكود السري">
-    <button type="submit" id="btn">دخول آمن</button>
-    <div id="err" class="err"></div>
-  </form>
-</div>
-<script>
-  document.getElementById('f').onsubmit = async (e) => {
-    e.preventDefault();
-    const btn = document.getElementById('btn'), err = document.getElementById('err');
-    btn.textContent = 'جاري التحقق...'; btn.disabled = true; err.style.display = 'none';
-    try {
-      const res = await fetch("https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1/rpc/verify_admin_login", {
-        method: 'POST',
-        headers: { 'apikey': "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D", 'Authorization': "Bearer sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D", 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input_email: document.getElementById('email').value.trim(), input_code: document.getElementById('password').value.trim() })
-      });
-      if(!res.ok) throw new Error('خطأ في الاتصال بالخادم');
-      const data = await res.json();
-      if(data === true) { localStorage.setItem('dawrat_logged', 'true'); window.location.href = 'admin.html'; }
-      else { err.textContent = 'البريد الإلكتروني أو الكود السري غير صحيح.'; err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false; }
-    } catch(ex) { err.textContent = ex.message; err.style.display = 'block'; btn.textContent = 'دخول آمن'; btn.disabled = false; }
-  };
-</script>
+
+    <div class="login-card">
+        <div class="login-title">لوحة تحكم الإدارة</div>
+        
+        <!-- تمت إضافة autocomplete="off" هنا -->
+        <form action="#" method="POST" autocomplete="off">
+            
+            <div class="input-group">
+                <!-- حقل البريد الإلكتروني -->
+                <input type="text" name="email" placeholder="البريد الإلكتروني" value="admin@dewerat.com" autocomplete="off" required>
+            </div>
+
+            <div class="input-group">
+                <!-- حقل كلمة المرور: تم استخدام new-password لمنع التعبئة التلقائية -->
+                <input type="password" name="password" placeholder="كلمة المرور" autocomplete="new-password" required>
+            </div>
+
+            <!-- حيلة إضافية لمنع المتصفحات العنيدة من تعبئة كلمة المرور -->
+            <input type="password" style="display:none;" autocomplete="new-password">
+
+            <button type="submit" class="login-btn">دخول آمن</button>
+        </form>
+    </div>
+
 </body>
 </html>
