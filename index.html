@@ -25,7 +25,7 @@ h1{font-size:clamp(36px,5vw,58px);line-height:1.3;color:var(--navy);margin:17px 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:20px}.stat{display:flex;align-items:center;gap:13px;padding:17px;background:white;border:1px solid #e0efea;border-radius:15px;box-shadow:0 8px 25px #092b4c08}
 .stat-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:13px;background:#e0f8f1;color:var(--green);font-size:22px}.stat strong{display:block;font-size:22px;color:var(--navy)}.stat small{color:var(--muted)}
 section.content{padding:55px 0}.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:23px}h2{color:var(--navy);font-size:clamp(24px,3vw,33px);margin:0;font-weight:900}.section-head p{color:var(--muted);margin:6px 0 0;font-size:14px}
-.search-row{display:flex;gap:10px;margin-bottom:17px}.search{flex:1;display:flex;align-items:center;gap:10px;padding:0 14px;background:white;border:1px solid #dcebe7;border-radius:12px}.search input{width:100%;padding:13px 0;border:0;outline:0;background:transparent}.search-row select{border:1px solid #dcebe7;border-radius:12px;background:white;padding:0 12px;color:var(--navy)}
+.search-row{display:flex;gap:10px;margin-bottom:17px}.search{flex:1;display:flex;align-items:center;gap:10px;padding:0 14px;background:white;border:1px solid #dcebe7;border-radius:12px}.search input{width:100%;padding:13px 0;border:0;outline:0;background:transparent}
 .categories{display:flex;gap:9px;overflow:auto;padding-bottom:5px;margin-bottom:23px}.category{white-space:nowrap;border:1px solid #bfd8d7;background:white;color:var(--navy);border-radius:11px;padding:9px 17px;font-weight:800}.category.active,.category:hover{background:var(--green);color:white;border-color:var(--green)}
 .courses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}.course{overflow:hidden;background:white;border:1px solid #e0eeeb;border-radius:19px;box-shadow:0 10px 28px #092b4c0b;transition:.2s;display:flex;flex-direction:column}.course:hover{transform:translateY(-4px);box-shadow:0 17px 35px #092b4c15}
 .course-art{height:155px;display:grid;place-items:center;position:relative;background:linear-gradient(135deg,#dff8f1,#f5fcfa)}.art-icon{width:90px;height:90px;border-radius:23px;background:var(--green);color:white;display:grid;place-items:center;font-size:43px;box-shadow:0 12px 24px #08b98b30}.tag{position:absolute;right:12px;top:12px;background:var(--green);color:white;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:800}
@@ -36,26 +36,25 @@ section.content{padding:55px 0}.section-head{display:flex;align-items:end;justif
 .empty{grid-column:1/-1;background:white;border-radius:15px;text-align:center;padding:35px;color:var(--muted)}
 footer{background:#082641;color:#d9e8ef;padding:35px 0 20px;margin-top:40px}.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:25px}footer p{color:#a9c2cf;line-height:1.9;font-size:13px}footer h4{color:white}footer a{display:block;margin:8px 0;font-size:13px}.copyright{border-top:1px solid #ffffff20;margin-top:20px;padding-top:17px;font-size:12px;color:#a0b9c7}
 @media(max-width:850px){.courses{grid-template-columns:repeat(2,minmax(0,1fr))}.links{gap:12px}.hero-inner{grid-template-columns:1fr .7fr}}
-@media(max-width:600px){.container{width:calc(100% - 26px)}.links{display:none}.hero-inner{grid-template-columns:1fr;padding-top:22px;gap:0}.art{grid-row:1;min-height:200px}.circle{width:190px;font-size:70px}h1{font-size:36px}.hero p{font-size:14px}.stats{gap:7px}.stat{display:block;text-align:center;padding:10px 3px}.stat-icon{margin:0 auto 6px;width:34px;height:34px;font-size:17px}.stat strong{font-size:17px}.stat small{font-size:10px}section.content{padding:39px 0}.section-head{align-items:flex-start;flex-direction:column}.search-row{flex-direction:column}.search-row select{height:44px}.courses{grid-template-columns:1fr;gap:13px}.course{display:grid;grid-template-columns:105px 1fr;border-radius:15px}.course-art{height:100%;min-height:200px}.art-icon{width:65px;height:65px;font-size:30px}.tag{right:6px;top:7px;font-size:9px;padding:4px 6px}.course-body{padding:11px}.course h3{font-size:14px;line-height:1.6}.instructor{font-size:10px}.avatar{width:27px;height:27px}.meta{font-size:9px}.price{font-size:17px}.bottom .btn{font-size:10px;padding:7px}.footer-grid{grid-template-columns:1fr 1fr}.footer-grid>div:first-child{grid-column:1/-1}}
+@media(max-width:600px){.container{width:calc(100% - 26px)}.links{display:none}.hero-inner{grid-template-columns:1fr;padding-top:22px;gap:0}.art{grid-row:1;min-height:200px}.circle{width:190px;font-size:70px}h1{font-size:36px}.hero p{font-size:14px}.stats{gap:7px}.stat{display:block;text-align:center;padding:10px 3px}.stat-icon{margin:0 auto 6px;width:34px;height:34px;font-size:17px}.stat strong{font-size:17px}.stat small{font-size:10px}section.content{padding:39px 0}.section-head{align-items:flex-start;flex-direction:column}.search-row{flex-direction:column}.courses{grid-template-columns:1fr;gap:13px}.course{display:grid;grid-template-columns:105px 1fr;border-radius:15px}.course-art{height:100%;min-height:200px}.art-icon{width:65px;height:65px;font-size:30px}.tag{right:6px;top:7px;font-size:9px;padding:4px 6px}.course-body{padding:11px}.course h3{font-size:14px;line-height:1.6}.instructor{font-size:10px}.avatar{width:27px;height:27px}.meta{font-size:9px}.price{font-size:17px}.bottom .btn{font-size:10px;padding:7px}.footer-grid{grid-template-columns:1fr 1fr}.footer-grid>div:first-child{grid-column:1/-1}}
 </style>
 </head>
 <body>
 <header><nav class="container"><a class="brand" href="#"><span class="logo">▱</span><span id="brandName">منصة دورات</span></a><div class="links"><a href="#home">الرئيسية</a><a href="#courses">الدورات</a><a href="login.html">دخول الإدارة</a></div><a class="btn" href="#courses">استكشف الدورات ←</a></nav></header>
-<section class="hero" id="home"><div class="container hero-inner"><div><span class="badge">✦ تعلّم بذكاء، وتقدّم بثقة</span><h1 id="heroTitle">منصة <span>دورات</span><br>تعلم بلا حدود</h1><p id="heroDescription">طوّر مهاراتك مع أفضل الدورات التدريبية في البرمجة والتصميم والتسويق والأعمال، وابدأ رحلتك نحو مستقبل أفضل.</p><div class="actions"><a class="btn" href="#courses">استكشف الدورات ←</a></div></div><div class="art"><div class="circle">🎓</div><div class="float f1">مسار تعلّمك<strong>يبدأ هنا ✨</strong></div><div class="float f2">دورات عملية<strong>تعلّم وطبّق</strong></div></div></div></section>
+<section class="hero" id="home"><div class="container hero-inner"><div><span class="badge">✦ تعلّم بذكاء، وتقدّم بثقة</span><h1 id="heroTitle">منصة <span>دورات</span><br>تعلم بلا حدود</h1><p id="heroDescription">طوّر مهاراتك مع أفضل الدورات التدريبية، وابدأ رحلتك نحو مستقبل أفضل.</p><div class="actions"><a class="btn" href="#courses">استكشف الدورات ←</a></div></div><div class="art"><div class="circle">🎓</div><div class="float f1">مسار تعلّمك<strong>يبدأ هنا ✨</strong></div><div class="float f2">دورات عملية<strong>تعلّم وطبّق</strong></div></div></div></section>
 <div class="container stats"><div class="stat"><div class="stat-icon">▤</div><div><strong id="courseCount">0</strong><small>دورة تدريبية</small></div></div><div class="stat"><div class="stat-icon">★</div><div><strong>4.9/5</strong><small>تقييم المتعلمين</small></div></div><div class="stat"><div class="stat-icon">♙</div><div><strong>+35</strong><small>مدرب وخبير</small></div></div></div>
-<section class="content" id="courses"><div class="container"><div class="section-head"><div><h2>اكتشف دورتك القادمة</h2><p>تعلّم مهارات جديدة مع دورات عملية تناسب طموحك.</p></div></div><div class="search-row"><label class="search">⌕ <input id="searchInput" placeholder="ابحث عن دورة أو مدرب..."></label><select id="sortSelect"><option value="featured">الأكثر تميزاً</option><option value="priceAsc">السعر: الأقل أولاً</option><option value="priceDesc">السعر: الأعلى أولاً</option><option value="rating">الأعلى تقييماً</option></select></div><div class="categories" id="categories"><button class="category active" data-cat="الكل">الكل</button></div><div class="courses" id="coursesGrid"></div></div></section>
-<footer><div class="container"><div class="footer-grid"><div><a class="brand" href="#"><span class="logo">▱</span><span>منصة دورات</span></a><p>منصتك للتعلم الرقمي واكتساب مهارات جديدة.</p></div><div><h4>روابط سريعة</h4><a href="#home">الرئيسية</a><a href="#courses">الدورات</a></div><div><h4>تواصل معنا</h4><a id="contactEmail" href="mailto:hello@dawrat.example">hello@dawrat.example</a><a href="login.html">لوحة الإدارة</a></div></div><div class="copyright">© <span id="year"></span> منصة دورات — جميع الحقوق محفوظة.</div></div></footer>
+<section class="content" id="courses"><div class="container"><div class="section-head"><div><h2>اكتشف دورتك القادمة</h2><p>تعلّم مهارات جديدة مع دورات عملية.</p></div></div><div class="search-row"><label class="search">⌕ <input id="searchInput" placeholder="ابحث عن دورة أو مدرب..."></label></div><div class="categories" id="categories"><button class="category active" data-cat="الكل">الكل</button></div><div class="courses" id="coursesGrid"></div></div></section>
+<footer><div class="container"><div class="footer-grid"><div><a class="brand" href="#"><span class="logo">▱</span><span>منصة دورات</span></a><p>منصتك للتعلم الرقمي.</p></div><div><h4>روابط سريعة</h4><a href="#home">الرئيسية</a><a href="#courses">الدورات</a></div><div><h4>تواصل معنا</h4><a href="login.html">لوحة الإدارة</a></div></div><div class="copyright">© <span id="year"></span> منصة دورات — جميع الحقوق محفوظة.</div></div></footer>
 
 <script>
-  const API_URL = "https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1";
-  const API_KEY = "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D";
-  const HEADERS = { 'apikey': API_KEY, 'Authorization': `Bearer ${API_KEY}` };
+  const URL = "https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1";
+  const KEY = "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D";
+  const H = { 'apikey': KEY }; // تم إزالة Authorization هنا
   let allCourses = [], currentCat = "الكل";
 
   async function loadData() {
     try {
-      // Load Settings
-      let res = await fetch(`${API_URL}/site_settings`, { headers: HEADERS });
+      let res = await fetch(`${URL}/site_settings`, { headers: H });
       let settings = await res.json();
       settings.forEach(s => {
         if(s.key === 'brand') document.getElementById('brandName').textContent = s.value;
@@ -63,65 +62,39 @@ footer{background:#082641;color:#d9e8ef;padding:35px 0 20px;margin-top:40px}.foo
         if(s.key === 'hero_desc') document.getElementById('heroDescription').textContent = s.value;
       });
 
-      // Load Categories
-      res = await fetch(`${API_URL}/categories`, { headers: HEADERS });
+      res = await fetch(`${URL}/categories`, { headers: H });
       let cats = await res.json();
       let catHTML = `<button class="category active" onclick="filterCat('الكل', this)">الكل</button>`;
       catHTML += cats.map(c => `<button class="category" onclick="filterCat('${c.name}', this)">${c.name}</button>`).join('');
       document.getElementById('categories').innerHTML = catHTML;
 
-      // Load Courses
-      res = await fetch(`${API_URL}/courses?published=eq.true&order=created_at.desc`, { headers: HEADERS });
+      res = await fetch(`${URL}/courses?published=eq.true&order=created_at.desc`, { headers: H });
       allCourses = await res.json();
       renderCourses();
-    } catch(e) {
-      document.getElementById('coursesGrid').innerHTML = '<div class="empty">حدث خطأ في تحميل البيانات.</div>';
-    }
+    } catch(e) { document.getElementById('coursesGrid').innerHTML = '<div class="empty">حدث خطأ في تحميل البيانات.</div>'; }
   }
 
   function renderCourses() {
     const q = document.getElementById('searchInput').value.toLowerCase();
-    const filtered = allCourses.filter(c => 
-      (currentCat === "الكل" || c.category === currentCat) &&
-      (c.title.toLowerCase().includes(q) || (c.instructor && c.instructor.toLowerCase().includes(q)))
-    );
-
+    const filtered = allCourses.filter(c => (currentCat === "الكل" || c.category === currentCat) && (c.title.toLowerCase().includes(q) || (c.instructor && c.instructor.toLowerCase().includes(q))));
     document.getElementById('courseCount').textContent = "+" + allCourses.length;
-
-    if(filtered.length === 0) {
-      document.getElementById('coursesGrid').innerHTML = '<div class="empty">لا توجد دورات مطابقة لبحثك.</div>';
-      return;
-    }
-
+    if(filtered.length === 0) { document.getElementById('coursesGrid').innerHTML = '<div class="empty">لا توجد دورات مطابقة.</div>'; return; }
     document.getElementById('coursesGrid').innerHTML = filtered.map(c => `
       <article class="course">
-        <div class="course-art">
-          ${c.badge ? `<span class="tag">${c.badge}</span>` : ""}
-          <div class="art-icon">${c.icon || "▤"}</div>
-        </div>
+        <div class="course-art">${c.badge ? `<span class="tag">${c.badge}</span>` : ""}<div class="art-icon">${c.icon || "▤"}</div></div>
         <div class="course-body">
           <div class="course-category">${c.category}</div>
           <h3>${c.title}</h3>
           <div class="instructor"><span class="avatar">${(c.instructor || "م").charAt(0)}</span><span>المدرب: ${c.instructor || "فريق دورات"}</span></div>
           <div class="meta"><span>◷ ${c.hours || 0} ساعات · ${c.lessons || 0} درس</span><span class="rating">★ ${Number(c.rating || 0).toFixed(1)}</span></div>
-          <div class="bottom">
-            <div class="price">${c.price} <small>ر.س</small></div>
-            <a href="course.html?id=${c.id}" class="btn">تفاصيل الدورة ←</a>
-          </div>
+          <div class="bottom"><div class="price">${c.price} <small>ر.س</small></div><a href="course.html?id=${c.id}" class="btn">تفاصيل الدورة ←</a></div>
         </div>
       </article>
     `).join('');
   }
 
-  window.filterCat = (cat, btn) => {
-    currentCat = cat;
-    document.querySelectorAll('.category').forEach(x => x.classList.remove('active'));
-    btn.classList.add('active');
-    renderCourses();
-  };
-
+  window.filterCat = (cat, btn) => { currentCat = cat; document.querySelectorAll('.category').forEach(x => x.classList.remove('active')); btn.classList.add('active'); renderCourses(); };
   document.getElementById('searchInput').addEventListener('input', renderCourses);
-  document.getElementById('sortSelect').addEventListener('change', renderCourses);
   document.getElementById('year').textContent = new Date().getFullYear();
   loadData();
 </script>
