@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تفاصيل الدورة | منصة دورات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{--navy:#092b4c;--green:#08b98b;--bg:#f3fbf9;--text:#132e47;--muted:#6b7f8d}
+  body{margin:0;font-family:Cairo,Tahoma,sans-serif;background:var(--bg);color:var(--text)}
+  header{background:var(--navy);color:white;padding:15px 0}nav{width:min(1100px,calc(100% - 30px));margin:auto;display:flex;justify-content:space-between;align-items:center}
+  .brand{font-size:22px;font-weight:900;color:white;text-decoration:none;display:flex;align-items:center;gap:10px}.logo{width:35px;height:35px;background:var(--green);border-radius:10px;display:grid;place-items:center}
+  .container{width:min(1100px,calc(100% - 30px));margin:30px auto;display:grid;grid-template-columns:2fr 1fr;gap:20px}
+  @media(max-width:800px){.container{grid-template-columns:1fr}}
+  .panel{background:white;border-radius:15px;padding:25px;box-shadow:0 5px 20px rgba(0,0,0,0.05);border:1px solid #e0eeeb}
+  h1{margin-top:0;color:var(--navy);font-size:26px}
+  .meta{color:var(--muted);font-size:13px;margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid #eee}
+  .lesson-list{list-style:none;padding:0}.lesson-list li{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid #eee;border-radius:10px;margin-bottom:10px;background:#f9fdfc}
+  .btn{background:var(--green);color:white;padding:10px 15px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block;font-family:inherit}
+  .btn:hover{background:#07a379}
+  .form-group{margin-bottom:15px}label{display:block;font-size:13px;font-weight:bold;margin-bottom:5px}
+  input{width:100%;padding:10px;border:1px solid #dcebe7;border-radius:8px;box-sizing:border-box;font-family:inherit}
+  .price-box{text-align:center;margin-bottom:20px}.price{font-size:32px;color:var(--green);font-weight:900}
+  .video-container{display:none;margin-bottom:20px;background:black;border-radius:10px;overflow:hidden}
+  .video-container video{width:100%;display:block}
+  .alert{padding:10px;border-radius:8px;font-size:13px;margin-top:10px;display:none;text-align:center}
+  .alert.success{background:#e0f8ef;color:#078463;display:block}
+  .alert.error{background:#fff0f2;color:#c8324a;display:block}
+</style>
+</head>
+<body>
+<header><nav><a href="index.html" class="brand"><span class="logo">▱</span> منصة دورات</a><a href="index.html" class="btn" style="background:transparent;border:1px solid white">عودة للرئيسية</a></nav></header>
+
+<div class="container">
+  <!-- تفاصيل الدورة والدروس -->
+  <div class="panel">
+    <h1 id="courseTitle">جاري التحميل...</h1>
+    <div class="meta" id="courseMeta"></div>
+    
+    <div class="video-container" id="videoContainer">
+      <video id="lessonVideo" controls playsinline controlsList="nodownload"></video>
+    </div>
+
+    <p id="courseDesc" style="line-height:1.8;color:#506a7a"></p>
+    
+    <h3 style="color:var(--navy);margin-top:30px">محتوى الدورة</h3>
+    <ul class="lesson-list" id="lessonsList"></ul>
+  </div>
+
+  <!-- استمارة الاهتمام -->
+  <div>
+    <div class="panel">
+      <div class="price-box">
+        <div class="price" id="coursePrice">0 ر.س</div>
+        <small style="color:var(--muted)">سعر الدورة كاملة</small>
+      </div>
+      
+      <h3 style="margin-top:0">سجل اهتمامك بالدورة</h3>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:15px">أدخل بياناتك وسيتواصل معك فريقنا لتأكيد الاشتراك.</p>
+      
+      <form id="enrollForm">
+        <div class="form-group"><label>الاسم الكامل *</label><input type="text" id="fullName" required></div>
+        <div class="form-group"><label>البريد الإلكتروني *</label><input type="email" id="email" required dir="ltr" style="text-align:left"></div>
+        <div class="form-group"><label>رقم الجوال (اختياري)</label><input type="tel" id="phone" dir="ltr" style="text-align:left"></div>
+        <button type="submit" class="btn" style="width:100%" id="submitBtn">تأكيد الاهتمام</button>
+        <div class="alert" id="formAlert"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = "https://rzostpeiwkdfpozhqsrv.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D";
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const courseId = urlParams.get('id');
+  let currentCourse = null;
+
+  async function loadCourse() {
+    if(!courseId) { document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px'>لم يتم العثور على الدورة</h2>"; return; }
+
+    const { data: c, error } = await db.from('courses').select('*, course_lessons(*)').eq('id', courseId).single();
+    if(error || !c) { document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px'>الدورة غير موجودة</h2>"; return; }
+    
+    currentCourse = c;
+    document.title = c.title + " | منصة دورات";
+    document.getElementById('courseTitle').textContent = c.title;
+    document.getElementById('coursePrice').textContent = Number(c.price).toLocaleString('ar') + " ر.س";
+    document.getElementById('courseDesc').textContent = c.description || "لا يوجد وصف لهذه الدورة.";
+    
+    document.getElementById('courseMeta').innerHTML = `
+      <span>المدرب: <b>${c.instructor}</b></span> | 
+      <span>القسم: <b>${c.category}</b></span> | 
+      <span>المدة: <b>${c.hours} ساعات</b></span> | 
+      <span>التقييم: <b>★ ${c.rating}</b></span>
+    `;
+
+    const list = document.getElementById('lessonsList');
+    if(c.course_lessons && c.course_lessons.length > 0) {
+      // ترتيب الدروس
+      const lessons = c.course_lessons.sort((a,b) => a.sort_order - b.sort_order);
+      list.innerHTML = lessons.map((l, i) => `
+        <li>
+          <span>${i+1}. ${l.title} <small style="color:var(--muted)">(${l.duration || 'بدون مدة'})</small></span>
+          ${l.video_url ? `<button class="btn" onclick="playVideo('${l.video_url}')" style="padding:5px 10px;font-size:12px">▶ مشاهدة</button>` : '<small style="color:var(--muted)">مغلق</small>'}
+        </li>
+      `).join('');
+    } else {
+      list.innerHTML = '<li style="justify-content:center;color:var(--muted)">سيتم إضافة الدروس قريباً</li>';
+    }
+  }
+
+  window.playVideo = (url) => {
+    const video = document.getElementById('lessonVideo');
+    const container = document.getElementById('videoContainer');
+    video.src = url;
+    container.style.display = 'block';
+    container.scrollIntoView({behavior: 'smooth', block: 'center'});
+    video.play();
+  };
+
+  document.getElementById('enrollForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const alert = document.getElementById('formAlert');
+    
+    btn.textContent = 'جاري الإرسال...';
+    btn.disabled = true;
+    alert.className = 'alert';
+    alert.style.display = 'none';
+
+    const { error } = await db.from('enrollments').insert({
+      course_id: currentCourse.id,
+      full_name: document.getElementById('fullName').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      status: 'pending'
+    });
+
+    if(error) {
+      alert.textContent = 'حدث خطأ، يرجى المحاولة لاحقاً.';
+      alert.className = 'alert error';
+    } else {
+      alert.textContent = 'تم تسجيل اهتمامك بنجاح! سنتواصل معك قريباً.';
+      alert.className = 'alert success';
+      document.getElementById('enrollForm').reset();
+    }
+    
+    btn.textContent = 'تأكيد الاهتمام';
+    btn.disabled = false;
+  });
+
+  loadCourse();
+</script>
+</body>
+</html>
