@@ -3,80 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم المتقدمة</title>
+<title>لوحة التحكم</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { --navy: #0f172a; --green: #10b981; --bg: #f8fafc; --muted: #64748b; --border: #e2e8f0; }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-  body { background: var(--bg); color: var(--navy); display: flex; min-height: 100vh; }
+  :root{--navy:#092b4c;--green:#08b98b;--bg:#f3fbf9;--muted:#6b7f8d;--border:#e0eeeb}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+  body{background:var(--bg);color:#132e47;display:flex;min-height:100vh}
   
   /* القائمة الجانبية */
-  .sidebar { width: 260px; background: var(--navy); color: white; display: flex; flex-direction: column; position: fixed; height: 100vh; transition: 0.3s; z-index: 100; }
-  .logo { text-align: center; font-size: 22px; font-weight: 800; padding: 25px 20px; color: var(--green); border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .sidebar a { padding: 15px 25px; color: #cbd5e1; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
-  .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.05); color: white; border-right: 4px solid var(--green); }
-  .sidebar .logout { margin-top: auto; color: #fca5a5; border-top: 1px solid rgba(255,255,255,0.1); }
+  .sidebar{width:260px;background:var(--navy);color:white;display:flex;flex-direction:column;position:fixed;height:100vh;transition:0.3s;z-index:100}
+  .logo{text-align:center;font-size:22px;font-weight:900;padding:25px 20px;color:var(--green);border-bottom:1px solid rgba(255,255,255,0.1)}
+  .sidebar a{padding:15px 25px;color:#cbd5e1;text-decoration:none;font-weight:700;cursor:pointer;transition:0.2s;display:flex;align-items:center;gap:10px}
+  .sidebar a:hover,.sidebar a.active{background:rgba(255,255,255,0.05);color:white;border-right:4px solid var(--green)}
+  .sidebar .logout{margin-top:auto;color:#fca5a5;border-top:1px solid rgba(255,255,255,0.1)}
   
   /* المحتوى */
-  .main { flex: 1; margin-right: 260px; padding: 30px; transition: 0.3s; }
-  .mobile-header { display: none; background: var(--navy); padding: 15px 20px; color: white; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 90; }
-  .mobile-header button { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+  .main{flex:1;margin-right:260px;padding:30px;transition:0.3s}
+  .mobile-header{display:none;background:var(--navy);padding:15px 20px;color:white;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:90}
+  .mobile-header button{background:none;border:none;color:white;font-size:24px;cursor:pointer}
   
-  .panel { display: none; animation: fadeIn 0.3s; }
-  .panel.active { display: block; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .panel{display:none;animation:fadeIn 0.3s}
+  .panel.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   
-  /* الإحصائيات */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
-  .stat-card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); text-align: center; }
-  .stat-card h3 { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
-  .stat-card .num { font-size: 36px; font-weight: 800; color: var(--green); }
+  /* البطاقات */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px}
+  .card-box{background:white;border-radius:19px;padding:25px;box-shadow:0 10px 28px #092b4c0b;border:1px solid var(--border);margin-bottom:20px}
+  .stat-card{text-align:center}.stat-card h3{color:var(--muted);font-size:14px;margin-bottom:10px}.stat-card .num{font-size:36px;font-weight:900;color:var(--green)}
   
   /* الجداول */
-  .card-box { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 20px; }
-  .table-responsive { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; min-width: 600px; }
-  th { text-align: right; padding: 15px; background: #f8fafc; color: var(--muted); font-weight: 700; font-size: 13px; border-bottom: 1px solid var(--border); }
-  td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+  .table-responsive{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;min-width:600px}
+  th{text-align:right;padding:15px;background:#f9fdfc;color:var(--muted);font-weight:700;font-size:13px;border-bottom:1px solid var(--border)}
+  td{padding:15px;border-bottom:1px solid #f1f5f9;font-size:14px}
   
-  /* الأزرار */
-  .btn { background: var(--green); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; font-family: inherit; transition: 0.3s; }
-  .btn:hover { background: #059669; }
-  .btn-red { background: #ef4444; } .btn-red:hover { background: #dc2626; }
-  .btn-sm { padding: 6px 12px; font-size: 12px; }
-  .badge { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; }
-  .badge-pending { background: #fef3c7; color: #92400e; } .badge-contacted { background: #dbeafe; color: #1e40af; } .badge-enrolled { background: #d1fae5; color: #065f46; }
-
+  /* الأزرار والحقول */
+  .btn{background:var(--green);color:white;border:none;padding:10px 20px;border-radius:11px;cursor:pointer;font-weight:800;font-family:inherit;transition:0.3s}
+  .btn:hover{filter:brightness(0.95)}
+  .btn-red{background:#ef4444}.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
+  input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:15px;outline:none;margin-bottom:15px}
+  input:focus{border-color:var(--green)}
+  
   /* النوافذ المنبثقة */
-  .modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 15px; }
-  .modal.active { display: flex; }
-  .modal-content { background: white; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; border-radius: 20px; padding: 30px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+  .modal{position:fixed;inset:0;background:rgba(9,43,76,0.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;padding:15px}
+  .modal.active{display:flex}
+  .modal-content{background:white;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;border-radius:20px;padding:30px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.25)}
   
-  input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 15px; outline: none; margin-bottom: 15px; }
-  input:focus { border-color: var(--green); }
-  
-  .lesson-row { display: grid; grid-template-columns: 1fr 80px 1fr auto; gap: 10px; background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid var(--border); align-items: start; }
-  .progress-bar { height: 6px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 5px; display: none; }
-  .progress-fill { height: 100%; background: var(--green); width: 0%; transition: 0.2s; }
+  /* صفوف الدروس */
+  .lesson-row{display:grid;grid-template-columns:1fr 80px 1fr auto;gap:10px;background:#f9fdfc;padding:15px;border-radius:12px;margin-bottom:10px;border:1px solid var(--border);align-items:start}
+  .progress-bar{height:6px;background:#e2e8f0;border-radius:4px;overflow:hidden;margin-top:5px;display:none}
+  .progress-fill{height:100%;background:var(--green);width:0%;transition:0.2s}
 
-  /* شاشة الهاتف */
-  @media(max-width: 768px) {
-    .sidebar { transform: translateX(100%); width: 100%; }
-    .sidebar.open { transform: translateX(0); }
-    .main { margin-right: 0; padding: 20px 15px; }
-    .mobile-header { display: flex; }
-    .lesson-row { grid-template-columns: 1fr; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
+  /* الهواتف */
+  @media(max-width:768px){
+    .sidebar{transform:translateX(100%);width:100%}.sidebar.open{transform:translateX(0)}
+    .main{margin-right:0;padding:20px 15px}.mobile-header{display:flex}
+    .lesson-row{grid-template-columns:1fr}.stats-grid{grid-template-columns:1fr 1fr}
   }
 </style>
 </head>
 <body>
-<script>
-  if(localStorage.getItem('dawrat_admin_logged') !== 'true') window.location.href = 'login.html';
-</script>
+<script>if(localStorage.getItem('dawrat_admin_logged') !== 'true') window.location.href = 'login.html';</script>
 
 <div class="mobile-header">
-  <div style="font-weight:800;">لوحة التحكم</div>
+  <div style="font-weight:900;">لوحة التحكم</div>
   <button onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
 </div>
 
@@ -86,87 +76,73 @@
   <a onclick="switchTab('courses', this)">📚 إدارة الدورات</a>
   <a onclick="switchTab('categories', this)">🗂️ الأقسام</a>
   <a onclick="switchTab('enrollments', this)">👥 الطلاب</a>
-  <a class="logout" onclick="localStorage.removeItem('dawrat_admin_logged'); window.location.href='login.html'">🚪 تسجيل الخروج</a>
+  <a class="logout" onclick="localStorage.removeItem('dawrat_admin_logged'); window.location.href='login.html'">🚪 خروج</a>
 </div>
 
 <div class="main">
-  <!-- 1. Dashboard -->
   <div id="tab-dashboard" class="panel active">
-    <h2 style="margin-bottom: 25px;">نظرة عامة على المنصة</h2>
+    <h2 style="color:var(--navy);margin-bottom:25px;">نظرة عامة</h2>
     <div class="stats-grid">
-      <div class="stat-card"><h3>إجمالي الدورات</h3><div class="num" id="statCourses">0</div></div>
-      <div class="stat-card"><h3>إجمالي الطلاب المهتمين</h3><div class="num" id="statEnrolls">0</div></div>
-      <div class="stat-card"><h3>مشاهدات الدورات</h3><div class="num" id="statViews">0</div></div>
+      <div class="card-box stat-card"><h3>إجمالي الدورات</h3><div class="num" id="statCourses">0</div></div>
+      <div class="card-box stat-card"><h3>إجمالي الطلاب</h3><div class="num" id="statEnrolls">0</div></div>
+      <div class="card-box stat-card"><h3>مشاهدات المنصة</h3><div class="num" id="statViews">0</div></div>
     </div>
   </div>
 
-  <!-- 2. Courses -->
   <div id="tab-courses" class="panel">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h2>إدارة الدورات</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h2 style="color:var(--navy)">إدارة الدورات</h2>
       <button class="btn" onclick="openCourseModal()">+ إضافة دورة</button>
     </div>
     <div class="card-box">
       <div class="table-responsive">
-        <table>
-          <thead><tr><th>العنوان</th><th>القسم</th><th>السعر</th><th>المشاهدات</th><th>إجراءات</th></tr></thead>
-          <tbody id="coursesTable"></tbody>
-        </table>
+        <table><thead><tr><th>العنوان</th><th>القسم</th><th>السعر</th><th>المشاهدات</th><th>إجراءات</th></tr></thead><tbody id="coursesTable"></tbody></table>
       </div>
     </div>
   </div>
 
-  <!-- 3. Categories -->
   <div id="tab-categories" class="panel">
-    <h2 style="margin-bottom: 20px;">إدارة الأقسام</h2>
-    <div class="card-box" style="display: flex; gap: 10px; align-items: center;">
-      <input type="text" id="newCatName" placeholder="اسم القسم الجديد..." style="margin:0; flex:1;">
+    <h2 style="color:var(--navy);margin-bottom:20px;">إدارة الأقسام</h2>
+    <div class="card-box" style="display:flex;gap:10px;align-items:center;">
+      <input type="text" id="newCatName" placeholder="اسم القسم الجديد..." style="margin:0;flex:1;">
       <button class="btn" onclick="addCategory()">إضافة</button>
     </div>
     <div class="card-box">
       <div class="table-responsive">
-        <table>
-          <thead><tr><th>اسم القسم</th><th>إجراء</th></tr></thead>
-          <tbody id="catsTable"></tbody>
-        </table>
+        <table><thead><tr><th>اسم القسم</th><th>إجراء</th></tr></thead><tbody id="catsTable"></tbody></table>
       </div>
     </div>
   </div>
 
-  <!-- 4. Enrollments -->
   <div id="tab-enrollments" class="panel">
-    <h2 style="margin-bottom: 20px;">الطلاب المهتمون</h2>
+    <h2 style="color:var(--navy);margin-bottom:20px;">الطلاب المهتمون</h2>
     <div class="card-box">
       <div class="table-responsive">
-        <table>
-          <thead><tr><th>الاسم</th><th>البريد</th><th>الدورة</th><th>الحالة</th><th>تغيير الحالة</th></tr></thead>
-          <tbody id="enrollTable"></tbody>
-        </table>
+        <table><thead><tr><th>الاسم</th><th>البريد</th><th>الدورة</th><th>الحالة</th><th>تغيير</th></tr></thead><tbody id="enrollTable"></tbody></table>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal -->
 <div class="modal" id="courseModal">
   <div class="modal-content">
-    <h2 id="modalTitle" style="margin-bottom: 20px;">إضافة دورة جديدة</h2>
+    <h2 id="modalTitle" style="color:var(--navy);margin-bottom:20px;">إضافة دورة</h2>
     <input type="hidden" id="cId">
-    <label>عنوان الدورة</label><input type="text" id="cTitle">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-      <div><label>القسم</label><select id="cCategory"></select></div>
-      <div><label>السعر (ر.س)</label><input type="number" id="cPrice" value="0"></div>
+    <label style="font-weight:700;font-size:13px;color:var(--navy)">عنوان الدورة</label><input type="text" id="cTitle">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+      <div><label style="font-weight:700;font-size:13px;color:var(--navy)">القسم</label><select id="cCategory"></select></div>
+      <div><label style="font-weight:700;font-size:13px;color:var(--navy)">السعر (ر.س)</label><input type="number" id="cPrice" value="0"></div>
     </div>
-    <label>اسم المدرب</label><input type="text" id="cInstructor" value="فريق المنصة">
-    <label>وصف الدورة</label><textarea id="cDesc" rows="3"></textarea>
+    <label style="font-weight:700;font-size:13px;color:var(--navy)">اسم المدرب</label><input type="text" id="cInstructor" value="فريق المنصة">
+    <label style="font-weight:700;font-size:13px;color:var(--navy)">وصف الدورة</label><textarea id="cDesc" rows="3"></textarea>
     
-    <h3 style="margin: 20px 0 15px; border-top: 1px solid var(--border); padding-top: 20px;">الدروس والفيديوهات</h3>
+    <h3 style="color:var(--navy);margin:20px 0 15px;border-top:1px solid var(--border);padding-top:20px;">الدروس والفيديوهات</h3>
     <div id="lessonsContainer"></div>
-    <button class="btn" type="button" onclick="addLessonRow()" style="background: #64748b; margin-bottom: 20px; width: 100%;">+ إضافة درس</button>
+    <button class="btn" type="button" onclick="addLessonRow()" style="background:#6b7f8d;margin-bottom:20px;width:100%;">+ إضافة درس</button>
     
-    <div style="display: flex; gap: 10px;">
-      <button class="btn" style="flex: 1; padding: 15px;" onclick="saveCourse()">حفظ</button>
-      <button class="btn btn-red" style="flex: 1; padding: 15px;" onclick="document.getElementById('courseModal').classList.remove('active')">إلغاء</button>
+    <div style="display:flex;gap:10px;">
+      <button class="btn" style="flex:1;padding:15px;" onclick="saveCourse()">حفظ</button>
+      <button class="btn btn-red" style="flex:1;padding:15px;" onclick="document.getElementById('courseModal').classList.remove('active')">إلغاء</button>
     </div>
   </div>
 </div>
@@ -187,13 +163,11 @@
   }
 
   async function loadData() {
-    // Load Categories
     let res = await fetch(`${API_URL}/categories`, { headers: HEADERS });
     cats = await res.json();
     document.getElementById('cCategory').innerHTML = cats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
     document.getElementById('catsTable').innerHTML = cats.map(c => `<tr><td>${c.name}</td><td><button class="btn btn-red btn-sm" onclick="delCategory('${c.id}')">حذف</button></td></tr>`).join('');
 
-    // Load Courses
     res = await fetch(`${API_URL}/courses?select=*,course_lessons(*)&order=created_at.desc`, { headers: HEADERS });
     courses = await res.json();
     document.getElementById('coursesTable').innerHTML = courses.map(c => `
@@ -206,15 +180,14 @@
       </tr>
     `).join('');
 
-    // Load Enrollments
     res = await fetch(`${API_URL}/enrollments?select=*,courses(title)&order=created_at.desc`, { headers: HEADERS });
     enrollments = await res.json();
     document.getElementById('enrollTable').innerHTML = enrollments.map(e => `
       <tr>
         <td>${e.full_name}</td><td dir="ltr" style="text-align:right">${e.email}</td><td>${e.courses?.title || 'محذوفة'}</td>
-        <td><span class="badge badge-${e.status || 'pending'}">${e.status || 'pending'}</span></td>
+        <td>${e.status || 'pending'}</td>
         <td>
-          <select onchange="updateEnrollStatus('${e.id}', this.value)" style="margin:0; padding:5px;">
+          <select onchange="updateEnrollStatus('${e.id}', this.value)" style="margin:0;padding:5px;">
             <option value="pending" ${e.status==='pending'?'selected':''}>قيد الانتظار</option>
             <option value="contacted" ${e.status==='contacted'?'selected':''}>تم التواصل</option>
             <option value="enrolled" ${e.status==='enrolled'?'selected':''}>مشترك</option>
@@ -223,31 +196,25 @@
       </tr>
     `).join('');
 
-    // Stats
     document.getElementById('statCourses').innerText = courses.length;
     document.getElementById('statEnrolls').innerText = enrollments.length;
     document.getElementById('statViews').innerText = courses.reduce((sum, c) => sum + (c.views || 0), 0);
   }
 
-  // --- Categories ---
   window.addCategory = async () => {
     const val = document.getElementById('newCatName').value.trim();
     if(!val) return;
     await fetch(`${API_URL}/categories`, { method: 'POST', headers: HEADERS, body: JSON.stringify({ name: val }) });
-    document.getElementById('newCatName').value = '';
-    loadData();
+    document.getElementById('newCatName').value = ''; loadData();
   };
   window.delCategory = async (id) => {
     if(confirm('حذف القسم؟')) { await fetch(`${API_URL}/categories?id=eq.${id}`, { method: 'DELETE', headers: HEADERS }); loadData(); }
   };
-
-  // --- Enrollments ---
   window.updateEnrollStatus = async (id, status) => {
     await fetch(`${API_URL}/enrollments?id=eq.${id}`, { method: 'PATCH', headers: HEADERS, body: JSON.stringify({ status }) });
     loadData();
   };
 
-  // --- Lessons & Video Upload (FIXED) ---
   window.addLessonRow = () => { currentLessons.push({ id: Date.now(), title: '', duration: '', video_url: '' }); renderLessons(); };
   window.removeLesson = (id) => { currentLessons = currentLessons.filter(l => l.id !== id); renderLessons(); };
 
@@ -256,24 +223,21 @@
       <div class="lesson-row">
         <input type="text" placeholder="عنوان الدرس" value="${l.title}" oninput="currentLessons[${i}].title=this.value" style="margin:0;">
         <input type="text" placeholder="المدة" value="${l.duration}" oninput="currentLessons[${i}].duration=this.value" style="margin:0;">
-        
         <div>
-          ${l.video_url ? `<div style="color:var(--green); font-weight:700; font-size:12px; margin-bottom:5px;">✓ تم الرفع</div>` : `
-            <input type="file" accept="video/*" onchange="uploadVideo(this, ${i})" style="margin:0; font-size:12px; padding:8px;">
+          ${l.video_url ? `<div style="color:var(--green);font-weight:800;font-size:12px;margin-bottom:5px;">✓ تم الرفع</div>` : `
+            <input type="file" accept="video/*" onchange="uploadVideo(this, ${i})" style="margin:0;font-size:12px;padding:8px;">
             <div class="progress-bar" id="prog-${i}"><div class="progress-fill" id="fill-${i}"></div></div>
           `}
         </div>
-
-        <button class="btn btn-red btn-sm" type="button" onclick="removeLesson(${l.id})" style="margin:0; height:100%;">حذف</button>
+        <button class="btn btn-red btn-sm" type="button" onclick="removeLesson(${l.id})" style="margin:0;height:100%;">حذف</button>
       </div>
     `).join('');
   }
 
-  // إصلاح رفع الفيديو باستخدام XHR لضمان العمل على الهواتف
+  // 🔥 الحل النهائي والمضمون لرفع الفيديو على الهواتف
   window.uploadVideo = (input, index) => {
     const file = input.files[0];
     if(!file) return;
-
     const fileName = `vid_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
     const bar = document.getElementById(`prog-${index}`);
     const fill = document.getElementById(`fill-${index}`);
@@ -283,27 +247,24 @@
     xhr.open('POST', `https://rzostpeiwkdfpozhqsrv.supabase.co/storage/v1/object/videos/${fileName}`);
     xhr.setRequestHeader('apikey', API_KEY);
     xhr.setRequestHeader('Authorization', `Bearer ${API_KEY}`);
-    xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream'); // ضروري جداً
+    xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
 
     xhr.upload.onprogress = (e) => {
       if(e.lengthComputable) fill.style.width = (e.loaded / e.total) * 100 + '%';
     };
-
     xhr.onload = () => {
       if(xhr.status >= 200 && xhr.status < 300) {
         currentLessons[index].video_url = STORAGE_URL + fileName;
         renderLessons();
       } else {
-        alert('فشل الرفع، تأكد من إعدادات الـ Storage: ' + xhr.responseText);
+        alert('فشل الرفع: ' + xhr.responseText);
         bar.style.display = 'none';
       }
     };
-
     xhr.onerror = () => { alert('خطأ في الشبكة'); bar.style.display = 'none'; };
     xhr.send(file);
   };
 
-  // --- Courses ---
   window.openCourseModal = () => {
     document.getElementById('cId').value = '';
     document.getElementById('cTitle').value = '';
