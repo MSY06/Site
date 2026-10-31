@@ -3,115 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<title>لوحة التحكم المتقدمة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{--navy:#092b4c;--green:#08b98b;--bg:#f3fbf9;--muted:#6b7f8d}
+  :root{--navy:#092b4c;--green:#08b98b;--bg:#f3fbf9;--muted:#6b7f8d;--border:#e0eeeb}
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
   body{background:var(--bg);color:#132e47;display:flex;flex-direction:column;min-height:100vh}
   
-  /* القائمة العلوية (متجاوبة) */
-  .topbar{background:var(--navy);color:white;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:15px 20px;gap:10px;position:sticky;top:0;z-index:100}
-  .topbar .logo{font-size:20px;font-weight:900;color:var(--green)}
-  .nav-links{display:flex;gap:10px;flex-wrap:wrap}
-  .nav-links a{color:#cbd5e1;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;padding:5px 10px;border-radius:8px}
-  .nav-links a.active{background:var(--green);color:white}
+  /* Topbar */
+  .topbar{background:var(--navy);color:white;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:15px 25px;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 4px 15px rgba(9,43,76,0.1)}
+  .brand-area{font-size:22px;font-weight:800;color:var(--green)}
+  .nav-tabs{display:flex;gap:8px;flex-wrap:wrap}
+  .nav-tabs a{color:#cbd5e1;text-decoration:none;font-weight:700;font-size:14px;cursor:pointer;padding:8px 15px;border-radius:8px;transition:0.3s}
+  .nav-tabs a.active{background:var(--green);color:white}
+  .nav-tabs a:hover:not(.active){background:rgba(255,255,255,0.1)}
   
-  .main{padding:20px;max-width:1200px;margin:0 auto;width:100%}
-  .panel{display:none}.panel.active{display:block}
+  .main{flex:1;padding:30px;max-width:1300px;margin:0 auto;width:100%}
+  .panel{display:none;animation:fadeIn 0.3s}
+  .panel.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
   
-  /* بطاقات الإحصائيات */
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:20px}
-  .card{background:white;padding:20px;border-radius:12px;text-align:center;box-shadow:0 4px 10px rgba(9,43,76,0.05)}
-  .card h3{font-size:13px;color:var(--muted);margin-bottom:10px}
-  .card .num{font-size:28px;font-weight:900;color:var(--green)}
+  /* Cards & Stats */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-bottom:30px}
+  .stat-card{background:white;padding:25px;border-radius:16px;border:1px solid var(--border);text-align:center;box-shadow:0 4px 10px rgba(9,43,76,0.03)}
+  .stat-card h3{font-size:14px;color:var(--muted);margin-bottom:10px}
+  .stat-card .num{font-size:36px;font-weight:800;color:var(--green)}
   
-  /* الجداول */
-  .table-box{background:white;padding:15px;border-radius:12px;overflow-x:auto;box-shadow:0 4px 10px rgba(9,43,76,0.05)}
-  table{width:100%;border-collapse:collapse;min-width:500px}
-  th,td{padding:12px;text-align:right;border-bottom:1px solid #eee;font-size:14px}
-  th{background:#f9fdfc;color:var(--muted)}
+  /* Tables */
+  .table-box{background:white;padding:20px;border-radius:16px;border:1px solid var(--border);overflow-x:auto;box-shadow:0 4px 10px rgba(9,43,76,0.03)}
+  table{width:100%;border-collapse:collapse;min-width:600px}
+  th,td{padding:15px;text-align:right;border-bottom:1px solid #f1f5f9;font-size:14px}
+  th{background:#f9fdfc;color:var(--muted);font-weight:700}
   
-  /* الأزرار والحقول */
-  .btn{background:var(--green);color:white;border:none;padding:10px 15px;border-radius:8px;font-weight:800;cursor:pointer;font-family:inherit}
-  .btn-red{background:#ef4444}.btn-sm{padding:5px 10px;font-size:12px}
-  input,select,textarea{width:100%;padding:12px;margin-bottom:10px;border:1px solid #dcebe7;border-radius:8px;font-family:inherit}
+  /* Forms & Buttons */
+  .btn{background:var(--green);color:white;border:none;padding:10px 20px;border-radius:8px;font-weight:800;cursor:pointer;font-family:inherit;transition:0.3s}
+  .btn:hover{background:#07a379}
+  .btn-red{background:#ef4444}.btn-red:hover{background:#dc2626}
+  .btn-sm{padding:6px 12px;font-size:12px}
+  input,select,textarea{width:100%;padding:12px;margin-bottom:15px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;outline:none;transition:0.3s}
+  input:focus,select:focus,textarea:focus{border-color:var(--green)}
   
-  /* النوافذ المنبثقة */
-  .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(9,43,76,0.8);display:none;align-items:center;justify-content:center;padding:15px;z-index:1000}
+  /* Modal */
+  .modal{position:fixed;inset:0;background:rgba(9,43,76,0.8);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:15px;z-index:1000}
   .modal.active{display:flex}
-  .modal-content{background:white;padding:25px;border-radius:16px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto}
+  .modal-content{background:white;padding:30px;border-radius:20px;width:100%;max-width:650px;max-height:90vh;overflow-y:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,0.3)}
   
-  /* صفوف الدروس */
-  .lesson-row{display:flex;flex-direction:column;gap:10px;background:#f9fdfc;padding:15px;border-radius:10px;margin-bottom:10px;border:1px solid #dcebe7}
-  .progress{height:8px;background:#e2e8f0;border-radius:4px;display:none;margin-top:5px}
-  .progress div{height:100%;background:var(--green);width:0%;transition:0.3s}
+  /* Lessons */
+  .lesson-row{display:grid;grid-template-columns:1fr 100px 1fr auto;gap:10px;align-items:center;background:#f9fdfc;padding:15px;border-radius:10px;margin-bottom:10px;border:1px solid var(--border)}
+  .progress-bar{height:8px;background:#e0eeeb;border-radius:4px;overflow:hidden;margin-top:5px;display:none}
+  .progress-fill{height:100%;background:var(--green);width:0%;transition:0.2s}
+
+  /* Toast */
+  #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--navy);color:white;padding:15px 30px;border-radius:30px;font-weight:700;opacity:0;transition:0.3s;z-index:2000;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
+  #toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+  @media(max-width:768px){
+    .main{padding:20px 15px}
+    .lesson-row{grid-template-columns:1fr}
+    .stats-grid{grid-template-columns:1fr 1fr}
+  }
 </style>
 </head>
 <body>
 <script>if(localStorage.getItem('dawrat_logged') !== 'true') window.location.href = 'login.html';</script>
 
 <div class="topbar">
-  <div class="logo">لوحة التحكم</div>
-  <div class="nav-links">
+  <div class="brand-area">▱ منصة دورات</div>
+  <div class="nav-tabs">
     <a class="active" onclick="tab('dashboard',this)">📊 نظرة عامة</a>
     <a onclick="tab('courses',this)">📚 الدورات</a>
     <a onclick="tab('cats',this)">🗂️ الأقسام</a>
     <a onclick="tab('enrolls',this)">👥 الطلاب</a>
-    <a onclick="localStorage.removeItem('dawrat_logged');location.href='login.html'" style="color:#fca5a5">🚪 خروج</a>
+    <a onclick="tab('settings',this)">⚙️ الإعدادات</a>
+    <a onclick="logout()" style="color:#fca5a5">🚪 خروج</a>
   </div>
 </div>
 
 <div class="main">
   <div id="tab-dashboard" class="panel active">
-    <div class="stats">
-      <div class="card"><h3>إجمالي الدورات</h3><div class="num" id="sCourses">0</div></div>
-      <div class="card"><h3>إجمالي الطلاب</h3><div class="num" id="sEnrolls">0</div></div>
+    <div class="stats-grid">
+      <div class="stat-card"><h3>إجمالي الدورات</h3><div class="num" id="sCourses">0</div></div>
+      <div class="stat-card"><h3>إجمالي الطلاب</h3><div class="num" id="sEnrolls">0</div></div>
+      <div class="stat-card"><h3>مشاهدات المنصة</h3><div class="num" id="sViews">0</div></div>
     </div>
   </div>
 
   <div id="tab-courses" class="panel">
-    <div style="display:flex;justify-content:space-between;margin-bottom:15px;">
-      <h2 style="font-size:20px;">الدورات</h2><button class="btn" onclick="openModal()">+ إضافة</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h2 style="color:var(--navy)">إدارة الدورات</h2>
+      <button class="btn" onclick="openModal()">+ إضافة دورة</button>
     </div>
-    <div class="table-box"><table><thead><tr><th>العنوان</th><th>السعر</th><th>إجراءات</th></tr></thead><tbody id="tCourses"></tbody></table></div>
+    <div class="table-box"><table><thead><tr><th>العنوان</th><th>القسم</th><th>السعر</th><th>إجراءات</th></tr></thead><tbody id="tCourses"></tbody></table></div>
   </div>
 
   <div id="tab-cats" class="panel">
-    <h2 style="font-size:20px;margin-bottom:15px;">الأقسام</h2>
-    <div class="table-box" style="margin-bottom:15px;display:flex;gap:10px;">
-      <input type="text" id="newCat" placeholder="اسم القسم..." style="margin:0;">
+    <h2 style="color:var(--navy);margin-bottom:20px;">إدارة الأقسام</h2>
+    <div class="table-box" style="margin-bottom:20px;display:flex;gap:10px;">
+      <input type="text" id="newCat" placeholder="اسم القسم الجديد..." style="margin:0;">
       <button class="btn" onclick="addCat()">إضافة</button>
     </div>
     <div class="table-box"><table><tbody id="tCats"></tbody></table></div>
   </div>
 
   <div id="tab-enrolls" class="panel">
-    <h2 style="font-size:20px;margin-bottom:15px;">الطلاب</h2>
-    <div class="table-box"><table><thead><tr><th>الاسم</th><th>البريد</th><th>الدورة</th></tr></thead><tbody id="tEnrolls"></tbody></table></div>
+    <h2 style="color:var(--navy);margin-bottom:20px;">الطلاب المهتمون</h2>
+    <div class="table-box"><table><thead><tr><th>الاسم</th><th>البريد</th><th>الدورة</th><th>الحالة</th></tr></thead><tbody id="tEnrolls"></tbody></table></div>
+  </div>
+
+  <div id="tab-settings" class="panel">
+    <h2 style="color:var(--navy);margin-bottom:20px;">إعدادات المنصة</h2>
+    <div class="table-box" style="max-width:600px;">
+      <label style="font-weight:700;font-size:13px">اسم المنصة</label>
+      <input type="text" id="setBrand">
+      <label style="font-weight:700;font-size:13px">عنوان الصفحة الرئيسية</label>
+      <input type="text" id="setTitle">
+      <label style="font-weight:700;font-size:13px">الوصف</label>
+      <textarea id="setDesc" rows="3"></textarea>
+      <button class="btn" style="width:100%" onclick="saveSettings()">حفظ الإعدادات</button>
+    </div>
   </div>
 </div>
 
 <div class="modal" id="courseModal">
   <div class="modal-content">
-    <h2 style="margin-bottom:15px;font-size:20px" id="mTitle">إضافة دورة</h2>
+    <h2 style="margin-bottom:20px" id="mTitle">إضافة دورة</h2>
     <input type="hidden" id="cId">
-    <input type="text" id="cTitle" placeholder="عنوان الدورة">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-      <select id="cCategory"></select>
-      <input type="number" id="cPrice" placeholder="السعر" value="0">
+    <label>عنوان الدورة</label><input type="text" id="cTitle">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+      <div><label>القسم</label><select id="cCategory"></select></div>
+      <div><label>السعر</label><input type="number" id="cPrice" value="0"></div>
     </div>
-    <input type="text" id="cInstructor" placeholder="المدرب" value="فريق المنصة">
-    <textarea id="cDesc" placeholder="وصف الدورة" rows="2"></textarea>
+    <label>المدرب</label><input type="text" id="cInstructor" value="فريق المنصة">
+    <label>الوصف</label><textarea id="cDesc" rows="3"></textarea>
     
-    <h3 style="font-size:16px;margin:15px 0 10px;">الدروس</h3>
+    <h3 style="margin:20px 0 15px;border-top:1px solid var(--border);padding-top:20px;">الدروس والفيديوهات</h3>
     <div id="lessonsBox"></div>
-    <button class="btn" type="button" onclick="addLesson()" style="background:#6b7f8d;width:100%;margin-bottom:15px;">+ إضافة درس</button>
+    <button class="btn" type="button" onclick="addLessonRow()" style="background:#6b7f8d;width:100%;margin-bottom:20px;">+ إضافة درس</button>
     
-    <button class="btn" style="width:100%;margin-bottom:10px;" onclick="save()">حفظ الكل</button>
-    <button class="btn btn-red" style="width:100%;" onclick="document.getElementById('courseModal').classList.remove('active')">إلغاء</button>
+    <div style="display:flex;gap:10px;">
+      <button class="btn" style="flex:1;padding:15px;" onclick="saveCourse()">حفظ الدورة</button>
+      <button class="btn btn-red" style="flex:1;padding:15px;" onclick="document.getElementById('courseModal').classList.remove('active')">إلغاء</button>
+    </div>
   </div>
 </div>
+
+<div id="toast">تمت العملية بنجاح!</div>
 
 <script>
   const URL = "https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1";
@@ -120,54 +156,59 @@
   const H = { 'apikey': KEY, 'Authorization': `Bearer ${KEY}`, 'Content-Type': 'application/json' };
   let courses = [], cats = [], enrolls = [], currentLessons = [];
 
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerText = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function logout() { localStorage.removeItem('dawrat_logged'); window.location.href = 'login.html'; }
+
   function tab(id, el) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.querySelectorAll('.nav-tabs a').forEach(a => a.classList.remove('active'));
     document.getElementById('tab-' + id).classList.add('active');
     if(el) el.classList.add('active');
   }
 
   async function load() {
+    // Load Categories
     let r = await fetch(`${URL}/categories`, { headers: H }); cats = await r.json();
     document.getElementById('cCategory').innerHTML = cats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
     document.getElementById('tCats').innerHTML = cats.map(c => `<tr><td>${c.name}</td><td><button class="btn btn-red btn-sm" onclick="delCat('${c.id}')">حذف</button></td></tr>`).join('');
 
+    // Load Courses
     r = await fetch(`${URL}/courses?select=*,course_lessons(*)&order=created_at.desc`, { headers: H }); courses = await r.json();
-    document.getElementById('tCourses').innerHTML = courses.map(c => `<tr><td>${c.title}</td><td>${c.price} ر.س</td><td><button class="btn btn-sm" onclick="edit('${c.id}')">تعديل</button> <button class="btn btn-red btn-sm" onclick="del('${c.id}')">حذف</button></td></tr>`).join('');
+    document.getElementById('tCourses').innerHTML = courses.map(c => `<tr><td>${c.title}</td><td>${c.category}</td><td>${c.price} ر.س</td><td><button class="btn btn-sm" onclick="editCourse('${c.id}')">تعديل</button> <button class="btn btn-red btn-sm" onclick="delCourse('${c.id}')">حذف</button></td></tr>`).join('');
 
+    // Load Enrollments
     r = await fetch(`${URL}/enrollments?select=*,courses(title)`, { headers: H }); enrolls = await r.json();
-    document.getElementById('tEnrolls').innerHTML = enrolls.map(e => `<tr><td>${e.full_name}</td><td>${e.email}</td><td>${e.courses?.title || '-'}</td></tr>`).join('');
+    document.getElementById('tEnrolls').innerHTML = enrolls.map(e => `<tr><td>${e.full_name}</td><td>${e.email}</td><td>${e.courses?.title || '-'}</td><td><span style="background:#e0f8ef;color:#078463;padding:4px 8px;border-radius:6px;font-size:12px">${e.status}</span></td></tr>`).join('');
 
+    // Stats
     document.getElementById('sCourses').innerText = courses.length;
     document.getElementById('sEnrolls').innerText = enrolls.length;
+    document.getElementById('sViews').innerText = courses.reduce((s, c) => s + (c.views || 0), 0);
+
+    // Load Settings
+    r = await fetch(`${URL}/site_settings`, { headers: H }); let settings = await r.json();
+    settings.forEach(s => {
+      if(s.key === 'brand') document.getElementById('setBrand').value = s.value;
+      if(s.key === 'hero_title') document.getElementById('setTitle').value = s.value;
+      if(s.key === 'hero_desc') document.getElementById('setDesc').value = s.value;
+    });
   }
 
+  // --- Categories ---
   window.addCat = async () => {
-    const v = document.getElementById('newCat').value;
-    if(v) { await fetch(`${URL}/categories`, { method: 'POST', headers: H, body: JSON.stringify({ name: v }) }); document.getElementById('newCat').value = ''; load(); }
+    const v = document.getElementById('newCat').value.trim();
+    if(v) { await fetch(`${URL}/categories`, { method: 'POST', headers: H, body: JSON.stringify({ name: v }) }); document.getElementById('newCat').value = ''; load(); showToast('تمت إضافة القسم'); }
   };
-  window.delCat = async (id) => { if(confirm('حذف؟')) { await fetch(`${URL}/categories?id=eq.${id}`, { method: 'DELETE', headers: H }); load(); } };
-  window.del = async (id) => { if(confirm('حذف؟')) { await fetch(`${URL}/courses?id=eq.${id}`, { method: 'DELETE', headers: H }); load(); } };
+  window.delCat = async (id) => { if(confirm('حذف؟')) { await fetch(`${URL}/categories?id=eq.${id}`, { method: 'DELETE', headers: H }); load(); showToast('تم الحذف'); } };
+  window.delCourse = async (id) => { if(confirm('حذف؟')) { await fetch(`${URL}/courses?id=eq.${id}`, { method: 'DELETE', headers: H }); load(); showToast('تم حذف الدورة'); } };
 
-  window.openModal = () => {
-    document.getElementById('cId').value = ''; document.getElementById('cTitle').value = ''; document.getElementById('cDesc').value = '';
-    document.getElementById('cPrice').value = '0'; document.getElementById('cInstructor').value = 'فريق المنصة';
-    currentLessons = []; renderLessons();
-    document.getElementById('mTitle').innerText = 'إضافة دورة';
-    document.getElementById('courseModal').classList.add('active');
-  };
-
-  window.edit = (id) => {
-    const c = courses.find(x => x.id == id); if(!c) return;
-    document.getElementById('cId').value = c.id; document.getElementById('cTitle').value = c.title;
-    document.getElementById('cCategory').value = c.category; document.getElementById('cPrice').value = c.price;
-    document.getElementById('cInstructor').value = c.instructor; document.getElementById('cDesc').value = c.description || '';
-    currentLessons = (c.course_lessons || []).map(l => ({...l, tempId: Date.now() + Math.random()})); renderLessons();
-    document.getElementById('mTitle').innerText = 'تعديل دورة';
-    document.getElementById('courseModal').classList.add('active');
-  };
-
-  window.addLesson = () => { currentLessons.push({ tempId: Date.now(), title: '', video_url: '' }); renderLessons(); };
+  // --- Lessons & Video Upload ---
+  window.addLessonRow = () => { currentLessons.push({ tempId: Date.now(), title: '', video_url: '' }); renderLessons(); };
   window.delLesson = (tid) => { currentLessons = currentLessons.filter(l => l.tempId !== tid); renderLessons(); };
 
   function renderLessons() {
@@ -175,19 +216,21 @@
       <div class="lesson-row">
         <input type="text" placeholder="عنوان الدرس" value="${l.title}" oninput="currentLessons[${i}].title=this.value" style="margin:0">
         ${l.video_url ? `<div style="color:var(--green);font-weight:bold;font-size:12px;">✓ تم رفع الفيديو</div>` : `
-          <input type="file" accept="video/*" onchange="upload(this, ${i})" style="margin:0;font-size:12px;">
-          <div class="progress" id="p-${i}"><div id="pf-${i}"></div></div>
+          <div>
+            <input type="file" accept="video/*" onchange="uploadVideo(this, ${i})" style="margin:0;font-size:12px;">
+            <div class="progress-bar" id="prog-${i}"><div class="progress-fill" id="fill-${i}"></div></div>
+          </div>
         `}
-        <button class="btn btn-red btn-sm" type="button" onclick="delLesson(${l.tempId})">حذف</button>
+        <button class="btn btn-red btn-sm" type="button" onclick="delLesson(${l.tempId})" style="margin:0">حذف</button>
       </div>
     `).join('');
   }
 
-  // 🔥 رفع الفيديو المضمون 100%
-  window.upload = (input, index) => {
+  // 🔥 الرفع المضمون عبر XMLHttpRequest
+  window.uploadVideo = (input, index) => {
     const file = input.files[0]; if(!file) return;
     const name = `v_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
-    const bar = document.getElementById('p-'+index), fill = document.getElementById('pf-'+index);
+    const bar = document.getElementById('prog-'+index), fill = document.getElementById('fill-'+index);
     bar.style.display = 'block'; input.disabled = true;
 
     const xhr = new XMLHttpRequest();
@@ -200,14 +243,33 @@
     xhr.onload = () => {
       if(xhr.status >= 200 && xhr.status < 300) {
         currentLessons[index].video_url = STORAGE + name;
-        renderLessons();
-      } else { alert('فشل الرفع. تأكد من إعدادات Storage. \n' + xhr.responseText); bar.style.display = 'none'; input.disabled = false; }
+        renderLessons(); showToast('تم رفع الفيديو بنجاح!');
+      } else { alert('فشل الرفع. تأكد من إعدادات التخزين.\n' + xhr.responseText); bar.style.display = 'none'; input.disabled = false; }
     };
-    xhr.onerror = () => { alert('خطأ في الشبكة'); bar.style.display = 'none'; input.disabled = false; };
+    xhr.onerror = () => { alert('خطأ في الشبكة أثناء الرفع'); bar.style.display = 'none'; input.disabled = false; };
     xhr.send(file);
   };
 
-  window.save = async () => {
+  // --- Course CRUD ---
+  window.openModal = () => {
+    document.getElementById('cId').value = ''; document.getElementById('cTitle').value = '';
+    document.getElementById('cPrice').value = '0'; document.getElementById('cInstructor').value = 'فريق المنصة';
+    document.getElementById('cDesc').value = ''; currentLessons = []; renderLessons();
+    document.getElementById('mTitle').innerText = 'إضافة دورة';
+    document.getElementById('courseModal').classList.add('active');
+  };
+
+  window.editCourse = (id) => {
+    const c = courses.find(x => x.id == id); if(!c) return;
+    document.getElementById('cId').value = c.id; document.getElementById('cTitle').value = c.title;
+    document.getElementById('cCategory').value = c.category; document.getElementById('cPrice').value = c.price;
+    document.getElementById('cInstructor').value = c.instructor; document.getElementById('cDesc').value = c.description || '';
+    currentLessons = (c.course_lessons || []).map(l => ({...l, tempId: Date.now() + Math.random()})); renderLessons();
+    document.getElementById('mTitle').innerText = 'تعديل دورة';
+    document.getElementById('courseModal').classList.add('active');
+  };
+
+  window.saveCourse = async () => {
     const id = document.getElementById('cId').value;
     const payload = {
       title: document.getElementById('cTitle').value,
@@ -232,7 +294,18 @@
       await fetch(`${URL}/course_lessons`, { method: 'POST', headers: H, body: JSON.stringify(lData) });
     }
     document.getElementById('courseModal').classList.remove('active');
-    load(); alert('تم الحفظ!');
+    load(); showToast('تم حفظ الدورة بنجاح!');
+  };
+
+  // --- Settings ---
+  window.saveSettings = async () => {
+    const payload = [
+      { key: 'brand', value: document.getElementById('setBrand').value },
+      { key: 'hero_title', value: document.getElementById('setTitle').value },
+      { key: 'hero_desc', value: document.getElementById('setDesc').value }
+    ];
+    await fetch(`${URL}/site_settings`, { method: 'POST', headers: { ...H, 'Prefer': 'resolution=merge-duplicates' }, body: JSON.stringify(payload) });
+    showToast('تم حفظ الإعدادات بنجاح!');
   };
 
   load();
