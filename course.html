@@ -54,14 +54,14 @@
 </div>
 
 <script>
-  const API_URL = "https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1";
-  const API_KEY = "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D";
-  const HEADERS = { 'apikey': API_KEY, 'Authorization': `Bearer ${API_KEY}` };
+  const URL = "https://rzostpeiwkdfpozhqsrv.supabase.co/rest/v1";
+  const KEY = "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D";
+  const H = { 'apikey': KEY, 'Content-Type': 'application/json' }; // بدون Authorization
   const id = new URLSearchParams(window.location.search).get('id');
 
-  async function loadCourse() {
+  async function load() {
     if(!id) return;
-    const res = await fetch(`${API_URL}/courses?id=eq.${id}&select=*,course_lessons(*)`, { headers: HEADERS });
+    const res = await fetch(`${URL}/courses?id=eq.${id}&select=*,course_lessons(*)`, { headers: H });
     const data = await res.json();
     if(!data.length) { document.getElementById('title').innerText = "الدورة غير موجودة"; return; }
     
@@ -72,7 +72,7 @@
     document.getElementById('desc').innerText = c.description || 'لا يوجد وصف.';
     document.getElementById('price').innerText = `${c.price} ر.س`;
 
-    fetch(`${API_URL}/courses?id=eq.${id}`, { method: 'PATCH', headers: {...HEADERS, 'Content-Type': 'application/json'}, body: JSON.stringify({ views: (c.views || 0) + 1 }) });
+    fetch(`${URL}/courses?id=eq.${id}`, { method: 'PATCH', headers: H, body: JSON.stringify({ views: (c.views || 0) + 1 }) });
 
     const list = document.getElementById('lessonsList');
     if(c.course_lessons && c.course_lessons.length) {
@@ -94,14 +94,14 @@
   document.getElementById('enrollForm').onsubmit = async (e) => {
     e.preventDefault();
     document.getElementById('subBtn').innerText = 'جاري الإرسال...';
-    await fetch(`${API_URL}/enrollments`, {
-      method: 'POST', headers: { ...HEADERS, 'Content-Type': 'application/json' },
+    await fetch(`${URL}/enrollments`, {
+      method: 'POST', headers: H,
       body: JSON.stringify({ course_id: id, full_name: document.getElementById('name').value, email: document.getElementById('email').value, phone: document.getElementById('phone').value, status: 'pending' })
     });
     document.getElementById('enrollForm').style.display = 'none';
     document.getElementById('successMsg').style.display = 'block';
   };
-  loadCourse();
+  load();
 </script>
 </body>
 </html>
