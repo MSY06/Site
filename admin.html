@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة التحكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:Cairo,sans-serif;background:#f3fbf9;margin:0;padding:20px;color:#132e47}
+.container{max-width:800px;margin:auto}
+.panel{background:white;padding:20px;border-radius:15px;margin-bottom:20px}
+input{width:100%;padding:10px;margin:5px 0;border:1px solid #ddd;border-radius:8px;box-sizing:border-box}
+.btn{background:#08b98b;color:white;padding:10px 15px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+.btn-red{background:#e74c3c}
+table{width:100%;border-collapse:collapse;margin-top:10px}th,td{padding:10px;border-bottom:1px solid #eee;text-align:right}
+</style>
+</head>
+<body>
+<div class="container">
+  <div style="display:flex;justify-content:space-between;align-items:center;">
+    <h2>لوحة التحكم</h2>
+    <button class="btn btn-red" onclick="localStorage.removeItem('admin_logged');location.href='login.html'">خروج</button>
+  </div>
+  
+  <div class="panel">
+    <h3>إضافة دورة جديدة</h3>
+    <form id="addForm">
+      <input type="text" id="t" placeholder="عنوان الدورة" required>
+      <input type="text" id="c" placeholder="القسم (مثال: برمجة)" required>
+      <input type="number" id="p" placeholder="السعر" required>
+      <button type="submit" class="btn">حفظ الدورة</button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h3>الدورات الحالية</h3>
+    <table><thead><tr><th>العنوان</th><th>السعر</th><th>إجراء</th></tr></thead><tbody id="list"></tbody></table>
+  </div>
+  
+  <div class="panel">
+    <h3>المهتمون</h3>
+    <table><thead><tr><th>الاسم</th><th>الإيميل</th><th>الدورة</th></tr></thead><tbody id="enrollList"></tbody></table>
+  </div>
+</div>
+
+<script>
+  if(localStorage.getItem('admin_logged') !== 'yes') location.href = 'login.html';
+  const db = supabase.createClient("https://rzostpeiwkdfpozhqsrv.supabase.co", "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D");
+
+  async function load() {
+    const { data: c } = await db.from('courses').select('*');
+    const { data: e } = await db.from('enrollments').select('*, courses(title)');
+    
+    document.getElementById('list').innerHTML = (c||[]).map(x => `<tr><td>${x.title}</td><td>${x.price}</td><td><button class="btn btn-red" onclick="del(${x.id})">حذف</button></td></tr>`).join('');
+    document.getElementById('enrollList').innerHTML = (e||[]).map(x => `<tr><td>${x.full_name}</td><td>${x.email}</td><td>${x.courses?.title || 'غير محدد'}</td></tr>`).join('');
+  }
+
+  document.getElementById('addForm').onsubmit = async (e) => {
+    e.preventDefault();
+    await db.from('courses').insert({title: document.getElementById('t').value, category: document.getElementById('c').value, price: document.getElementById('p').value});
+    document.getElementById('addForm').reset();
+    load();
+  };
+
+  window.del = async (id) => {
+    if(confirm('حذف؟')) { await db.from('courses').delete().eq('id', id); load(); }
+  };
+
+  load();
+</script>
+</body>
+</html>

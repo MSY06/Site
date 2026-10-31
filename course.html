@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تفاصيل الدورة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{font-family:Cairo,sans-serif;background:#f3fbf9;margin:0;padding:20px;color:#132e47}
+.container{max-width:800px;margin:auto;background:white;padding:30px;border-radius:15px}
+input{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:8px;box-sizing:border-box}
+.btn{background:#08b98b;color:white;padding:12px 20px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;width:100%}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="index.html">← العودة</a>
+  <h1 id="title" style="color:#092b4c"></h1>
+  <p id="desc"></p>
+  <h3>سجل اهتمامك:</h3>
+  <form id="enrollForm">
+    <input type="text" id="name" placeholder="الاسم الكامل" required>
+    <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+    <button type="submit" class="btn" id="btn">إرسال</button>
+  </form>
+  <p id="msg" style="color:green; font-weight:bold; display:none;">تم التسجيل بنجاح!</p>
+</div>
+
+<script>
+  const db = supabase.createClient("https://rzostpeiwkdfpozhqsrv.supabase.co", "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D");
+  const id = new URLSearchParams(window.location.search).get('id');
+  let currentTitle = "";
+
+  async function load() {
+    if(!id) return;
+    const { data } = await db.from('courses').select('*').eq('id', id).single();
+    if(data) {
+      currentTitle = data.title;
+      document.getElementById('title').textContent = data.title;
+      document.getElementById('desc').textContent = data.description || "لا يوجد وصف.";
+    }
+  }
+
+  document.getElementById('enrollForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const { error } = await db.from('enrollments').insert({
+      course_id: id,
+      full_name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      status: 'pending'
+    });
+    if(!error) {
+      document.getElementById('enrollForm').style.display = 'none';
+      document.getElementById('msg').style.display = 'block';
+    } else {
+      alert("حدث خطأ، حاول مرة أخرى.");
+    }
+  };
+  load();
+</script>
+</body>
+</html>

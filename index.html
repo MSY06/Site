@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>منصة دورات | تعلّم بلا حدود</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--navy:#092b4c;--green:#08b98b;--bg:#f3fbf9;--text:#132e47;--muted:#6b7f8d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:"Cairo",sans-serif}
+a{text-decoration:none;color:inherit}button,input,select{font:inherit}
+.container{width:min(1150px,calc(100% - 30px));margin:auto}
+header{background:var(--navy);color:white;padding:15px 0}nav{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-size:25px;font-weight:900}.logo{width:43px;height:43px;border-radius:14px;background:var(--green);display:grid;place-items:center;font-size:25px}
+.btn{border:0;border-radius:11px;padding:11px 17px;background:var(--green);color:white;font-weight:800;display:inline-block;cursor:pointer}
+.hero{background:linear-gradient(130deg,#dff7f2,#f2fbf9);padding:50px 0}
+h1{font-size:38px;color:var(--navy);margin:0 0 15px}h1 span{color:var(--green)}.hero p{line-height:1.8;color:#506a7a;font-size:16px}
+section.content{padding:40px 0}
+.search-row{display:flex;gap:10px;margin-bottom:20px}.search{flex:1;display:flex;align-items:center;padding:0 14px;background:white;border:1px solid #dcebe7;border-radius:12px}.search input{width:100%;padding:13px 0;border:0;outline:0}
+.courses{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:19px}
+.course{background:white;border:1px solid #e0eeeb;border-radius:19px;overflow:hidden;display:flex;flex-direction:column}
+.course-body{padding:17px;flex:1;display:flex;flex-direction:column}.course h3{color:var(--navy);margin:5px 0 12px}
+.bottom{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:15px}
+.price{font-size:20px;font-weight:900;color:var(--green)}
+</style>
+</head>
+<body>
+<header><div class="container"><nav><a class="brand" href="#"><span class="logo">▱</span> منصة دورات</a><a class="btn" href="login.html">دخول الإدارة</a></nav></div></header>
+<section class="hero"><div class="container"><h1>منصة <span>دورات</span> تعلّم بلا حدود</h1><p>طوّر مهاراتك مع أفضل الدورات التدريبية.</p></div></section>
+<section class="content" id="courses"><div class="container">
+<div class="search-row"><label class="search"><input id="searchInput" placeholder="ابحث عن دورة..."></label></div>
+<div class="courses" id="coursesGrid"></div>
+</div></section>
+
+<script>
+  const db = supabase.createClient("https://rzostpeiwkdfpozhqsrv.supabase.co", "sb_publishable_D-ZORF2XC_DpamNWMQmO9g_tdP_2b0D");
+  let courses = [];
+
+  async function loadData() {
+    const { data, error } = await db.from('courses').select('*').eq('published', true);
+    if(data) { courses = data; render(); }
+    else { document.getElementById('coursesGrid').innerHTML = '<p>لا توجد دورات حالياً أو حدث خطأ.</p>'; }
+  }
+
+  function render() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const list = courses.filter(c => c.title.toLowerCase().includes(q));
+    document.getElementById('coursesGrid').innerHTML = list.map(c => `
+      <article class="course">
+        <div class="course-body">
+          <h3>${c.title}</h3>
+          <p style="color:#6b7f8d;font-size:13px">${c.description || ''}</p>
+          <div class="bottom">
+            <div class="price">${c.price} ر.س</div>
+            <a href="course.html?id=${c.id}" class="btn">التفاصيل</a>
+          </div>
+        </div>
+      </article>
+    `).join('') || '<p>لا توجد نتائج مطابقة.</p>';
+  }
+
+  document.getElementById('searchInput').addEventListener('input', render);
+  loadData();
+</script>
+</body>
+</html>
