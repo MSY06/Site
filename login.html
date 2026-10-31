@@ -5,12 +5,13 @@
 <title>دخول الإدارة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800&display=swap" rel="stylesheet">
 <style>
+  :root{--navy:#092b4c;--green:#08b98b;--bg:#f3fbf9;}
   * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-  body { background: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
-  .box { background: white; padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; text-align: center; }
-  h2 { color: #0f172a; margin-top: 0; }
+  body { background: var(--bg); display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
+  .box { background: white; padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(9,43,76,0.1); width: 100%; max-width: 400px; text-align: center; border: 1px solid #e0eeeb;}
+  h2 { color: var(--navy); margin-top: 0; }
   input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; font-size: 16px; outline: none; }
-  button { width: 100%; padding: 14px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 16px; cursor: pointer; font-family: inherit; margin-top: 10px; }
+  button { width: 100%; padding: 14px; background: var(--green); color: white; border: none; border-radius: 10px; font-weight: 800; font-size: 16px; cursor: pointer; font-family: inherit; margin-top: 10px; }
   .err { color: #ef4444; font-size: 13px; margin-top: 15px; display: none; background: #fef2f2; padding: 10px; border-radius: 8px; text-align: left; word-wrap: break-word; }
 </style>
 </head>
