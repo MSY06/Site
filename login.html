@@ -27,8 +27,10 @@ async function login(){
  try{
    const res=await fetch(`${REST}/rpc/verify_admin_login`,{
      method:'POST',headers:{...H,'Accept':'application/json'},
-     body:JSON.stringify({p_username:username,p_password:password})
-   });
+     body:JSON.stringify({
+  input_email: username,
+  input_code: password
+});
    const raw=await res.text();
    let data;try{data=raw?JSON.parse(raw):null;}catch(_){data=raw;}
    if(!res.ok){
